@@ -357,7 +357,10 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/chenyingqiao/Phero.git",
-                "reference": "023dc87b6f7f6d49a2c2bcab825a28a195a1477b"
+                "reference": "2fa07b66d7ac9ab59e877fbc6cb977027513c6fd"
+            },
+            "require": {
+                "php": ">=5.3.0"
             },
             "type": "library",
             "autoload": {
@@ -372,13 +375,14 @@
                     "email": "614325722@QQ.COM"
                 }
             ],
-            "description": "Db library",
+            "description": "orm database library",
             "keywords": [
                 "database",
                 "mysql",
+                "p-hero",
                 "sql"
             ],
-            "time": "2017-03-24 04:03:53"
+            "time": "2017-03-28 07:44:44"
         },
         {
             "name": "nikic/fast-route",
