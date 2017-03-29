@@ -3,14 +3,15 @@
  * @Author: lerko
  * @Date:   2017-03-27 13:46:27
  * @Last Modified by:   lerko
- * @Last Modified time: 2017-03-27 17:17:36
+ * @Last Modified time: 2017-03-29 14:54:05
  */
 require "vendor/autoload.php";
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use League\Route\Strategy as strategy;
+use League\Route\Strategy as Strategy;
 use Zend\Diactoros\Response as ZendResponse;
+use App\Controller as Controller;
 
 $container = new League\Container\Container;
 
@@ -34,13 +35,9 @@ $route->map('GET', '/user/{id:number}/{name}', function (ServerRequestInterface 
 	var_dump($args);
     $response->getBody()->write("<h1>Hello, World! /user/");
     return $response;
-})->setStrategy(new strategy\ApplicationStrategy());
+})->setStrategy(new Strategy\ApplicationStrategy());
 
-$route->map('GET', '/user/{id:number}/{name}', function (ServerRequestInterface $request, ResponseInterface $response,array $args) {
-	var_dump($args);
-    $response->getBody()->write("<h1>Hello, World! /user/");
-    return $response;
-})->setStrategy(new strategy\ApplicationStrategy());
+$route->get('/test',[new Controller\TestController,"test"])->setStrategy(new Strategy\JsonStrategy);
 
 $response = $route->dispatch($container->get('request'), $container->get('response'));
 
