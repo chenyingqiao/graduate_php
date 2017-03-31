@@ -3,7 +3,7 @@
  * @Author: lerko
  * @Date:   2017-03-27 13:46:27
  * @Last Modified by:   lerko
- * @Last Modified time: 2017-03-29 14:54:05
+ * @Last Modified time: 2017-03-29 15:21:03
  */
 require "vendor/autoload.php";
 
@@ -32,7 +32,6 @@ $route->map('GET', '/', function (ServerRequestInterface $request, ResponseInter
 });
 
 $route->map('GET', '/user/{id:number}/{name}', function (ServerRequestInterface $request, ResponseInterface $response,array $args) {
-	var_dump($args);
     $response->getBody()->write("<h1>Hello, World! /user/");
     return $response;
 })->setStrategy(new Strategy\ApplicationStrategy());
