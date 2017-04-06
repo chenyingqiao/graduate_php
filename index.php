@@ -3,15 +3,18 @@
  * @Author: lerko
  * @Date:   2017-03-27 13:46:27
  * @Last Modified by:   lerko
- * @Last Modified time: 2017-03-29 15:21:03
+ * @Last Modified time: 2017-04-06 19:19:15
  */
 require "vendor/autoload.php";
 
+use App\Controller as Controller;
+use League\Route\Strategy as Strategy;
+use Phero\System\DI;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use League\Route\Strategy as Strategy;
 use Zend\Diactoros\Response as ZendResponse;
-use App\Controller as Controller;
+
+DI::inj("all_config_path","./App/Config/Config.php");
 
 $container = new League\Container\Container;
 

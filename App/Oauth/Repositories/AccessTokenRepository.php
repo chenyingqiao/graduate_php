@@ -9,10 +9,10 @@
 
 namespace App\Oauth\Repositories;
 
+use App\Oauth\Db\AccessTokenEntity;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
-use OAuth2ServerExamples\Entities\AccessTokenEntity;
+
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
@@ -21,7 +21,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
-        // Some logic here to save the access token to a database
+        $accessTokenEntity->insert();
     }
 
     /**
@@ -29,7 +29,9 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function revokeAccessToken($tokenId)
     {
-        // Some logic here to revoke the access token
+        $accessTokenEntity=new AccessTokenEntity(["id"=>$tokenId]);
+        $accessTokenEntity->revoke=0;
+        $accessToken->update();
     }
 
     /**
@@ -37,7 +39,8 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        return false; // Access token hasn't been revoked
+        $accessTokenEntity=new AccessTokenEntity(["id"=>$tokenId]);
+        return $accessToken->revoke;
     }
 
     /**
