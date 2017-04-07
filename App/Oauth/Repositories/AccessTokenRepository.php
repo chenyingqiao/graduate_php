@@ -11,6 +11,7 @@ namespace App\Oauth\Repositories;
 
 use App\Oauth\Db\AccessTokenEntity;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 
@@ -21,7 +22,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
-        $accessTokenEntity->insert();
+        $effect=$accessTokenEntity->insert();
+        if($effect)
+            return $accessTokenEntity;
+        else
+            return null;
     }
 
     /**
@@ -29,9 +34,13 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function revokeAccessToken($tokenId)
     {
-        $accessTokenEntity=new AccessTokenEntity(["id"=>$tokenId]);
+        $accessTokenEntity=new AccessTokenEntity();
         $accessTokenEntity->revoke=0;
-        $accessToken->update();
+        $effect=$accessTokenEntity->whereEq("id",$tokenId)->update();
+        if($effect){
+            return $tokenId;
+        }
+        return 0;
     }
 
     /**
@@ -39,8 +48,9 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        $accessTokenEntity=new AccessTokenEntity(["id"=>$tokenId]);
-        return $accessToken->revoke;
+        $accessTokenEntity=new AccessTokenEntity();
+        $result=$accessTokenEntity->whereEq("id",$tokenId)->find();
+        return $accessTokenEntity->revoke;
     }
 
     /**

@@ -2,10 +2,13 @@
 /**
  * @Author: lerko
  * @Date:   2017-04-06 19:36:41
- * @Last Modified by:   lerko
- * @Last Modified time: 2017-04-06 19:38:30
+ * @Last Modified by:   ‘chenyingqiao’
+ * @Last Modified time: 2017-04-06 22:29:37
  */
 namespace App\Oauth\Db\Traits;
+
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
 trait TokenTrait{
 	/**
