@@ -3,7 +3,7 @@
  * @Author: lerko
  * @Date:   2017-04-06 20:06:29
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-07 23:22:47
+ * @Last Modified time: 2017-04-08 09:32:45
  */
 namespace App\Test\DbTest;
 
@@ -18,6 +18,7 @@ class AccessTokenRespositoryTest extends TestCase
 	/**
 	 * [access_token_db_test description]
 	 * @Author   Lerko
+	 * @codeCoverageIgnore
 	 * @DateTime 2017-04-06T21:59:07+0800
 	 * @return   [type]                   [description]
 	 */
@@ -32,8 +33,6 @@ class AccessTokenRespositoryTest extends TestCase
 	// 	$accessTokenEntity->scope=12;
 	// 	$accessTokenEntity->revoke=0;
 	// 	$result=$AccessTokenRespository->persistNewAccessToken($accessTokenEntity);
-	// 	echo $accessTokenEntity->sql();
-	// 	echo $accessTokenEntity->error();
 	// 	$this->assertEquals($result,$accessTokenEntity);
 	// }
 
@@ -51,7 +50,7 @@ class AccessTokenRespositoryTest extends TestCase
 	// 	$this->assertEquals($id,1);
 	// }
 
-	public function test_revoke_access_token(){
+	public function test_is_revoke_access_token(){
 		DI::inj("all_config_path","/var/www/html/graduate_php/App/Config/phero_config.php");
 		$AccessTokenRespository=new AccessTokenRepository();
 		$accessTokenEntity=new AccessTokenEntity();

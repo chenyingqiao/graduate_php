@@ -9,9 +9,9 @@
 
 namespace App\Oauth\Repositories;
 
+use App\Oauth\Db\ScopeEntity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use OAuth2ServerExamples\Entities\ScopeEntity;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
@@ -24,7 +24,7 @@ class ScopeRepository implements ScopeRepositoryInterface
             'basic' => [
                 'description' => 'Basic details about you',
             ],
-            'email' => [
+            'admin' => [
                 'description' => 'Your email address',
             ],
         ];
@@ -51,7 +51,7 @@ class ScopeRepository implements ScopeRepositoryInterface
         // Example of programatically modifying the final scope of the access token
         if ((int) $userIdentifier === 1) {
             $scope = new ScopeEntity();
-            $scope->setIdentifier('email');
+            $scope->setIdentifier('admin');
             $scopes[] = $scope;
         }
 

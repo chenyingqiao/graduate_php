@@ -2,8 +2,8 @@
 /**
  * @Author: lerko
  * @Date:   2017-04-06 15:40:23
- * @Last Modified by:   lerko
- * @Last Modified time: 2017-04-06 20:02:12
+ * @Last Modified by:   ‘chenyingqiao’
+ * @Last Modified time: 2017-04-08 16:35:39
  */
 namespace App\Oauth\Db;
 
@@ -30,6 +30,8 @@ class AccessTokenEntity extends DbUnit implements AccessTokenEntityInterface
 	 * @Field[name=client_id]
 	 * @var [type]
 	 */
+	public $client_id;
+
 	public $client;
 
 	/**
@@ -37,6 +39,8 @@ class AccessTokenEntity extends DbUnit implements AccessTokenEntityInterface
 	 * @var [type]
 	 */
 	public $expiry_time;
+
+	public $ExpiryDateTime;
 
 	/**
 	 * @Field[name=user_id]

@@ -2,17 +2,20 @@
 /**
  * @Author: lerko
  * @Date:   2017-04-06 19:43:29
- * @Last Modified by:   lerko
- * @Last Modified time: 2017-04-06 19:49:41
+ * @Last Modified by:   ‘chenyingqiao’
+ * @Last Modified time: 2017-04-08 15:26:23
  */
 namespace App\Oauth\Db;
 
+use App\Oauth\Db\Traits\EntityTrait;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Phero\Database\DbUnit;
 /**
-* 
+* @Table[name=client]
 */
-class ClientEntity extends DbUnit implements League\OAuth2\Server\Entities\ClientEntityInterface
+class ClientEntity extends DbUnit implements ClientEntityInterface
 {
+	use EntityTrait;
 	/**
 	 * @Field[name=id]
 	 * @var [type]

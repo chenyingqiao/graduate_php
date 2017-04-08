@@ -3,7 +3,7 @@
  * @Author: lerko
  * @Date:   2017-04-06 19:36:41
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-06 22:29:37
+ * @Last Modified time: 2017-04-08 16:35:45
  */
 namespace App\Oauth\Db\Traits;
 
@@ -38,7 +38,7 @@ trait TokenTrait{
      */
     public function getExpiryDateTime()
     {
-        return $this->expiry_time;
+        return $this->ExpiryDateTime;
     }
 
     /**
@@ -48,7 +48,7 @@ trait TokenTrait{
      */
     public function setExpiryDateTime(\DateTime $dateTime)
     {
-        $this->expiry_time = $dateTime;
+        $this->ExpiryDateTime = $dateTime;
     }
 
     /**

@@ -2,8 +2,8 @@
 /**
  * @Author: lerko
  * @Date:   2017-04-06 19:32:44
- * @Last Modified by:   lerko
- * @Last Modified time: 2017-04-06 19:43:18
+ * @Last Modified by:   ‘chenyingqiao’
+ * @Last Modified time: 2017-04-08 15:26:19
  */
 namespace App\Oauth\Db;
 
@@ -12,7 +12,7 @@ use App\Oauth\Db\Traits\TokenTrait;
 use Phero\Database\DbUnit;
 
 /**
-* 
+* @Table[name=auth]
 */
 class AuthCodeEntity extends DbUnit implements League\OAuth2\Server\Entities\AuthCodeEntityInterface
 {
@@ -47,6 +47,12 @@ class AuthCodeEntity extends DbUnit implements League\OAuth2\Server\Entities\Aut
 	 * @var [type]
 	 */
 	public $redirect_url;
+
+	/**
+	 * @Field[name=revoke]
+	 * @var [type]
+	 */
+	public $revoke;
 
 	 /**
      * @return string

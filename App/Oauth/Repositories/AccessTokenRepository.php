@@ -22,6 +22,8 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
+        $accessTokenEntity->client_id=$accessTokenEntity->client->id;
+        $accessTokenEntity->expiry_time=$accessTokenEntity->ExpiryDateTime->format('Y-m-d H:i:s');
         $effect=$accessTokenEntity->insert();
         if($effect)
             return $accessTokenEntity;
@@ -50,7 +52,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     {
         $accessTokenEntity=new AccessTokenEntity();
         $result=$accessTokenEntity->whereEq("id",$tokenId)->find();
-        return $accessTokenEntity->revoke;
+        return $result['revoke'];
     }
 
     /**

@@ -9,8 +9,8 @@
 
 namespace App\Oauth\Repositories;
 
+use App\Oauth\Db\ClientEntity;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use OAuth2ServerExamples\Entities\ClientEntity;
 
 class ClientRepository implements ClientRepositoryInterface
 {
@@ -19,33 +19,23 @@ class ClientRepository implements ClientRepositoryInterface
      */
     public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
     {
-        $clients = [
-            'myawesomeapp' => [
-                'secret'          => password_hash('abc123', PASSWORD_BCRYPT),
-                'name'            => 'My Awesome App',
-                'redirect_uri'    => 'http://foo/bar',
-                'is_confidential' => true,
-            ],
-        ];
-
-        // Check if client is registered
-        if (array_key_exists($clientIdentifier, $clients) === false) {
+        $clientEntity=new ClientEntity();
+        $client_result=$clientEntity->whereEq("id",$clientIdentifier)->find();
+        if (empty($client_result)) {
             return;
         }
-
-        if (
-            $mustValidateSecret === true
-            && $clients[$clientIdentifier]['is_confidential'] === true
-            && password_verify($clientSecret, $clients[$clientIdentifier]['secret']) === false
-        ) {
-            return;
-        }
-
+        //检测是否是加密选项
+        // if (
+        //     $mustValidateSecret === true
+        //     && $client['is_confidential'] == true
+        //     && password_verify($clientSecret, $client['secret']) === false
+        // ) {
+        //     return;
+        // }
         $client = new ClientEntity();
         $client->setIdentifier($clientIdentifier);
-        $client->setName($clients[$clientIdentifier]['name']);
-        $client->setRedirectUri($clients[$clientIdentifier]['redirect_uri']);
-
+        $client->setName($client_result['name']);
+        $client->setRedirectUri($client_result['redirect_url']);
         return $client;
     }
 }

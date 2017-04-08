@@ -20,7 +20,11 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        // Some logic to persist the auth code to a database
+        $effect=$authCodeEntity->insert();
+        if($effect)
+            return $authCodeEntity;
+        else
+            return null;
     }
 
     /**
@@ -28,7 +32,13 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function revokeAuthCode($codeId)
     {
-        // Some logic to revoke the auth code in a database
+        $authCodeEntity=new AuthCodeEntity();
+        $authCodeEntity->revoke=0;
+        $effect=$authCodeEntity->whereEq("id",$codeId)->update();
+        if($effect){
+            return $tokenId;
+        }
+        return 0;
     }
 
     /**
@@ -36,7 +46,9 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function isAuthCodeRevoked($codeId)
     {
-        return false; // The auth code has not been revoked
+        $authCodeEntity=new AuthCodeEntity();
+        $revoke=$authCodeEntity->whereEq("id",$codeId)->find("revoke");
+        return $revoke;
     }
 
     /**

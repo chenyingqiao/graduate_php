@@ -9,18 +9,25 @@
 
 namespace App\Oauth\Repositories;
 
+use App\Oauth\Db\RefreshTokenEntity;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
-use OAuth2ServerExamples\Entities\RefreshTokenEntity;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntityInterface)
+    public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
         // Some logic to persist the refresh token in a database
+        $refreshTokenEntity->access_token_id=$refreshTokenEntity->accessToken->id;
+        $refreshTokenEntity->expiry_time=$refreshTokenEntity->expiryDateTime->format('Y-m-d H:i:s');
+        $effet=$refreshTokenEntity->insert();
+        if($effet)
+            return $refreshTokenEntity;
+        else
+            return null;
     }
 
     /**
@@ -29,6 +36,13 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     public function revokeRefreshToken($tokenId)
     {
         // Some logic to revoke the refresh token in a database
+        $refreshTokenEntity=new RefreshTokenEntity();
+        $refreshTokenEntity->revoke=0;
+        $effect=$refreshTokenEntity->whereEq("id",$tokenId)->update();
+        if($effect){
+            return $tokenId;
+        }
+        return 0;
     }
 
     /**
@@ -36,7 +50,9 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        return false; // The refresh token has not been revoked
+        $refreshTokenEntity=new RefreshTokenEntity();
+        $result=$refreshTokenEntity->whereEq("id",$tokenId)->find();
+        return $result['revoke'];
     }
 
     /**

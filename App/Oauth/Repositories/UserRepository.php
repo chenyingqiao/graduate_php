@@ -9,9 +9,9 @@
 
 namespace App\Oauth\Repositories;
 
+use App\Model\UserEntity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use OAuth2ServerExamples\Entities\UserEntity;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -24,10 +24,12 @@ class UserRepository implements UserRepositoryInterface
         $grantType,
         ClientEntityInterface $clientEntity
     ) {
-        if ($username === 'alex' && $password === 'whisky') {
-            return new UserEntity();
+        $UserEntity=new UserEntity();
+        $result=$UserEntity->whereEq('username',$username)->whereAndEq('password',$password)->find();
+        if (!empty($result)) {
+            $result=new UserEntity($result);
+            return $result;
         }
-
         return;
     }
 }
