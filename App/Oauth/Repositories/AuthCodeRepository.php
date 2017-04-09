@@ -48,7 +48,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
     {
         $authCodeEntity=new AuthCodeEntity();
         $revoke=$authCodeEntity->whereEq("id",$codeId)->find("revoke");
-        return $revoke;
+        return $revoke==1?false:true;
     }
 
     /**

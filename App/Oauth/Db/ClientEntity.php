@@ -3,7 +3,7 @@
  * @Author: lerko
  * @Date:   2017-04-06 19:43:29
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 15:26:23
+ * @Last Modified time: 2017-04-08 23:25:49
  */
 namespace App\Oauth\Db;
 
@@ -63,5 +63,15 @@ class ClientEntity extends DbUnit implements ClientEntityInterface
     public function getRedirectUri()
     {
         return $this->redirect_url;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setRedirectUri($uri)
+    {
+        $this->redirect_url = $uri;
     }
 }

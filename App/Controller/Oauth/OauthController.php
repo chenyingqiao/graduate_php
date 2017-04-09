@@ -3,17 +3,20 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:33:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 15:45:41
+ * @Last Modified time: 2017-04-09 07:41:11
  */
 namespace App\Controller\Oauth;
 
 use App\Oauth\Repositories\AccessTokenRepository;
+use App\Oauth\Repositories\AuthCodeRepository;
 use App\Oauth\Repositories\ClientRepository;
 use App\Oauth\Repositories\RefreshTokenRepository;
 use App\Oauth\Repositories\ScopeRepository;
 use App\Oauth\Repositories\UserRepository;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -41,13 +44,22 @@ class OauthController
 
 
 	private function getOauthService(){
+        $clientRepository = new ClientRepository();
+        $accessTokenRepository = new AccessTokenRepository();
+        $scopeRepository = new ScopeRepository();
+        $authCodeRepository = new AuthCodeRepository();
+        $refreshTokenRepository = new RefreshTokenRepository();
+        $privateKeyPath = 'file://' . __DIR__ . '/key/private.key';
+        $publicKeyPath = 'file://' . __DIR__ . '/key/public.key';
+
 		$server=new AuthorizationServer(
-				new ClientRepository(),                 // instance of ClientRepositoryInterface
-	            new AccessTokenRepository(),            // instance of AccessTokenRepositoryInterface
-	            new ScopeRepository(),                  // instance of ScopeRepositoryInterface
-	            'file://' . __DIR__ . '/key/private.key',    // path to private key
-	            'file://' . __DIR__ . '/key/public.key'      // path to public key
+    			$clientRepository,
+                $accessTokenRepository,
+                $scopeRepository,
+                $privateKeyPath,
+                $publicKeyPath
 			);
+        //密码验证服务器
         $grant = new PasswordGrant(
             new UserRepository(),           // instance of UserRepositoryInterface
             new RefreshTokenRepository()    // instance of RefreshTokenRepositoryInterface
@@ -56,6 +68,23 @@ class OauthController
             $grant,
             new \DateInterval('PT1H') // access tokens will expire after 1 hour
         );
+
+        $refreshTokenGrant=new RefreshTokenGrant($refreshTokenRepository);
+         $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
+        $server->enableGrantType(
+            $refreshTokenGrant,
+            new \DateInterval('PT1H') 
+            );
+
+        $server->enableGrantType(
+            new AuthCodeGrant(
+                $authCodeRepository,
+                $refreshTokenRepository,
+                new \DateInterval('PT10M')
+            ),
+            new \DateInterval('PT1H')
+        );
+        
 		return $server;
 	}
 }

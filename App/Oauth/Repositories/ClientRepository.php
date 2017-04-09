@@ -27,8 +27,8 @@ class ClientRepository implements ClientRepositoryInterface
         //检测是否是加密选项
         // if (
         //     $mustValidateSecret === true
-        //     && $client['is_confidential'] == true
-        //     && password_verify($clientSecret, $client['secret']) === false
+        //     && $client_result['is_confidential'] == true
+        //     && password_verify($clientSecret, $client_result['secret']) === false
         // ) {
         //     return;
         // }

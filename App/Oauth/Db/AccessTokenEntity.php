@@ -3,7 +3,7 @@
  * @Author: lerko
  * @Date:   2017-04-06 15:40:23
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 16:35:39
+ * @Last Modified time: 2017-04-09 09:44:54
  */
 namespace App\Oauth\Db;
 
@@ -21,10 +21,16 @@ class AccessTokenEntity extends DbUnit implements AccessTokenEntityInterface
 	use AccessTokenTrait,TokenTrait,EntityTrait;
 
 	/**
-	 * @Field[name=id]
+	 * @Field[name=access_token_id]
 	 * @var [type]
 	 */
 	public $id;
+
+	/**
+	 * @Field[name=id]
+	 * @var [type]
+	 */
+	public $auto_id;
 
 	/**
 	 * @Field[name=client_id]
@@ -56,7 +62,7 @@ class AccessTokenEntity extends DbUnit implements AccessTokenEntityInterface
 	public $scopes;
 
 	/**
-	 * @Field[name=revoke]
+	 * @Field[name=revoke,type=int]
 	 * @var [type]
 	 */
 	public $revoke;

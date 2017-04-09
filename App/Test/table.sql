@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-08 11:46:56
+* @Last Modified time: 2017-04-09 08:14:53
 */
 show tables;
 
@@ -12,10 +12,11 @@ select * from access_token;
 	drop table access_token;
 	CREATE TABLE `access_token` (
 	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `access_token_id` varchar(255) DEFAULT '',
 	  `client_id` varchar(45) DEFAULT NULL,
 	  `expiry_time` datetime DEFAULT NULL,
 	  `user_id` int(11) DEFAULT NULL,
-	  `scope` int(11) DEFAULT NULL,
+	  `scope` varchar(45) DEFAULT NULL,
 	  `revoke` tinyint(1) DEFAULT 1,
 	  PRIMARY KEY (`id`),
 	  UNIQUE KEY `id_UNIQUE` (`id`)

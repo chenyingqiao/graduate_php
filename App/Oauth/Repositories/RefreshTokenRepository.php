@@ -52,7 +52,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     {
         $refreshTokenEntity=new RefreshTokenEntity();
         $result=$refreshTokenEntity->whereEq("id",$tokenId)->find();
-        return $result['revoke'];
+        return $result['revoke']==1?false:true;
     }
 
     /**
