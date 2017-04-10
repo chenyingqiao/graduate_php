@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 22:08:24
+ * @Last Modified time: 2017-04-10 22:53:14
  */
 namespace App\Controller\Route;
 
@@ -17,6 +17,7 @@ use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Strategy\JsonStrategy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Tuupola\Middleware\Cors;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;
@@ -28,6 +29,8 @@ class MyRoute
 {
 	private $route;
 	private $container;
+	private $corsSetting;
+	
 	public function __construct(&$route)
 	{
 		$this->container = new Container;
@@ -40,6 +43,14 @@ class MyRoute
 	        );
 	        return $server;
     	});
+    	$this->corsSetting=[
+		    "origin" => ["*"],
+		    "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE","OPTIONS"],
+		    "headers.allow" => ["content-type","authorization"],
+		    "headers.expose" => [],
+		    "credentials" => true,
+		    "cache" => 0,
+		];
 		$this->route = new RouteCollection($this->container);
 	}
 
@@ -54,18 +65,39 @@ class MyRoute
 		    return $response;
 		});
 
-		$this->route->map('GET', '/access_test', function (ServerRequestInterface $request, ResponseInterface $response,array $args) {
+		$this->route->map('GET', '/access_test', function (ServerRequestInterface $request, ResponseInterface $response) {
 		    $response->getBody()->write("Hello, World! /user/");
 		    return $response;
-		})->setStrategy(new ApplicationStrategy())->middleware(new ResourceServerMiddleware($this->container->get("resourceServer")));
-
+		})->setStrategy(new ApplicationStrategy())
+		->middleware(new Cors($this->corsSetting))
+		->middleware(new ResourceServerMiddleware($this->container->get("resourceServer")));
 	}
 
+	/**
+	 * oauth2.0服务器验证
+	 * @Author   Lerko
+	 * @DateTime 2017-04-09T13:37:21+0800
+	 */
 	public function Oauth(){
 		$OauthController=new OauthController();
-		$this->route->group('/user',function($route) use ($OauthController){
-			$route->post("/oauth",[$OauthController,'passwordOauth'])->setStrategy(new JsonStrategy);
-		});
+		$this->route->group('/auth',function($route) use ($OauthController){
+			$route->post("/local",[$OauthController,'passwordOauth']);
+			$route->options("/local",function (ServerRequestInterface $request, ResponseInterface $response) {
+			    $response->withStatus(204,"No Content");
+			    return $response;
+			});
+		})->setStrategy(new JsonStrategy)
+		->middleware(new Cors($this->corsSetting));
+		
+	}
+
+	public function User()
+	{
+		$OauthController=new OauthController();
+		$this->route->group('/users',function($route) use ($OauthController){
+			$route->get("/snsLogins",[$OauthController,'snsLogins']);
+		})->setStrategy(new JsonStrategy)
+		->middleware(new Cors($this->corsSetting));
 	}
 
 	public function dispatch(){

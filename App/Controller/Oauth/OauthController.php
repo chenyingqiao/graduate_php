@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:33:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-09 07:41:11
+ * @Last Modified time: 2017-04-10 23:16:56
  */
 namespace App\Controller\Oauth;
 
@@ -19,6 +19,7 @@ use League\OAuth2\Server\Grant\PasswordGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\JsonResponse;
 
 /**
 * 
@@ -27,6 +28,8 @@ class OauthController
 {
 	public function passwordOauth(ServerRequestInterface $request,ResponseInterface $response,array $args){
 		$server=$this->getOauthService();
+        $jsonData=json_decode($request->getBody()->getContents(),true);
+        $request=$request->withParsedBody($jsonData);
 		try {
             // Try to respond to the access token request
             return $server->respondToAccessTokenRequest($request, $response);
@@ -42,7 +45,22 @@ class OauthController
         }
 	}
 
+    public function snsLogins(ServerRequestInterface $request,ResponseInterface $response,array $args)
+    {
+        $json=[
+                "data"=>["github"],
+                "success"=>true
+            ];
+        $response->getBody()->write(json_encode($json));
+        return $response;
+    }
 
+    /**
+     * 获取Oauth2.0验证服务器实例
+     * @Author   Lerko
+     * @DateTime 2017-04-09T15:29:30+0800
+     * @return   [type]                   [description]
+     */
 	private function getOauthService(){
         $clientRepository = new ClientRepository();
         $accessTokenRepository = new AccessTokenRepository();

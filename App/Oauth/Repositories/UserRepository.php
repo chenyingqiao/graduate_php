@@ -25,8 +25,8 @@ class UserRepository implements UserRepositoryInterface
         ClientEntityInterface $clientEntity
     ) {
         $UserEntity=new UserEntity();
-        $result=$UserEntity->whereEq('username',$username)->whereAndEq('password',$password)->find();
-        if (!empty($result)) {
+        $result=$UserEntity->whereEq('username',$username)->find();
+        if (!empty($result)&&password_verify($password,$result['password'])) {
             $result=new UserEntity($result);
             return $result;
         }

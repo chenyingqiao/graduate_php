@@ -3,11 +3,13 @@
  * @Author: lerko
  * @Date:   2017-04-06 20:06:29
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 09:32:45
+ * @Last Modified time: 2017-04-09 17:48:26
  */
 namespace App\Test\DbTest;
 
+use App\Model\UserEntity;
 use App\Oauth\Db\AccessTokenEntity;
+use App\Oauth\Db\ClientEntity;
 use App\Oauth\Repositories\AccessTokenRepository;
 use PHPUnit\Framework\TestCase;
 use Phero\System\DI;
@@ -50,11 +52,45 @@ class AccessTokenRespositoryTest extends TestCase
 	// 	$this->assertEquals($id,1);
 	// }
 
-	public function test_is_revoke_access_token(){
+	// public function test_is_revoke_access_token(){
+	// 	DI::inj("all_config_path","/var/www/html/graduate_php/App/Config/phero_config.php");
+	// 	$AccessTokenRespository=new AccessTokenRepository();
+	// 	$accessTokenEntity=new AccessTokenEntity();
+	// 	$id=$AccessTokenRespository->isAccessTokenRevoked(1);
+	// 	$this->assertEquals($id,0);
+	// }
+
+	// public function test_create_user()
+	//  {
+	// 	DI::inj("all_config_path","/var/www/html/graduate_php/App/Config/phero_config.php");
+	// 	$userEntity=new UserEntity();
+	// 	$userEntity->username="test1";
+	// 	$userEntity->password=password_hash("111111",PASSWORD_DEFAULT);
+	// 	$userEntity->create_time=time();
+	// 	$userEntity->update_time=time();
+	// 	$userEntity->head_image="https://avatars2.githubusercontent.com/u/8207331?v=3&s=460";
+	// 	$userEntity->sex=1;
+	// 	echo "==========";
+	// 	$effect=$userEntity->insert();
+	// 	echo $userEntity->error();
+	// 	echo $userEntity->sql();
+	// 	var_dump($effect);
+	// 	$this->assertEquals($effect,true);
+	//  } 
+	//  
+	
+	public function test_create_user()
+	 {
 		DI::inj("all_config_path","/var/www/html/graduate_php/App/Config/phero_config.php");
-		$AccessTokenRespository=new AccessTokenRepository();
-		$accessTokenEntity=new AccessTokenEntity();
-		$id=$AccessTokenRespository->isAccessTokenRevoked(1);
-		$this->assertEquals($id,0);
-	}
+		$clientEntity=new ClientEntity();
+		$clientEntity->name="test_client_1";
+		$clientEntity->redirect_url="http://www.baidu.com";
+		$clientEntity->secret=password_hash("111111",PASSWORD_DEFAULT);
+		$clientEntity->is_confidential=1;
+		$effect=$clientEntity->insert();
+		echo $clientEntity->error();
+		echo $clientEntity->sql();
+		var_dump($effect);
+		$this->assertEquals($effect,true);
+	 } 
 }

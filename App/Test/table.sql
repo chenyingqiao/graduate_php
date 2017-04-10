@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-09 08:14:53
+* @Last Modified time: 2017-04-09 17:38:03
 */
 show tables;
 
@@ -71,10 +71,10 @@ select * from user;
 	CREATE TABLE user (
 	  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	  `username` VARCHAR(45) NULL,
-	  `password` VARCHAR(45) NULL,
+	  `password` VARCHAR(255) NULL,
 	  `create_time` VARCHAR(45) NULL,
 	  `update_time` VARCHAR(45) NULL,
-	  `hard_image` VARCHAR(45) NULL,
+	  `head_image` TEXT NULL,
 	  `sex` TINYINT(1) NULL,
 	  PRIMARY KEY (`id`),
 	  UNIQUE INDEX `id_UNIQUE` (`id` ASC))

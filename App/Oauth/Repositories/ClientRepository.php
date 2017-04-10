@@ -25,13 +25,13 @@ class ClientRepository implements ClientRepositoryInterface
             return;
         }
         //检测是否是加密选项
-        // if (
-        //     $mustValidateSecret === true
-        //     && $client_result['is_confidential'] == true
-        //     && password_verify($clientSecret, $client_result['secret']) === false
-        // ) {
-        //     return;
-        // }
+        if (
+            $mustValidateSecret == true
+            && $client_result['is_confidential'] == 1
+            && password_verify($clientSecret, $client_result['secret']) === false
+        ) {
+            return;
+        }
         $client = new ClientEntity();
         $client->setIdentifier($clientIdentifier);
         $client->setName($client_result['name']);

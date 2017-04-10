@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 16:20:44
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 16:31:58
+ * @Last Modified time: 2017-04-09 15:22:26
  */
 namespace App\Oauth\Db;
 
@@ -13,7 +13,7 @@ use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use Phero\Database\DbUnit;
 
 /**
-* 
+* @Table[name=refresh_token]
 */
 class RefreshTokenEntity extends DbUnit implements RefreshTokenEntityInterface
 {

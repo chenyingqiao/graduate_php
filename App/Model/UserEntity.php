@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 11:47:50
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 16:08:52
+ * @Last Modified time: 2017-04-09 17:37:09
  */
 namespace App\Model;
 
@@ -22,34 +22,40 @@ class UserEntity extends DbUnit implements UserEntityInterface
 	 * @var [type]
 	 */
 	public $id;
+
 	/**
 	 * @Field[name=username]
 	 * @var [type]
 	 */
 	public $username;
+
 	/**
 	 * @Field[name=password]
 	 * @var [type]
 	 */
 	public $password;
+
 	/**
 	 * @Field[name=create_time]
 	 * @var [type]
 	 */
 	public $create_time;
+
 	/**
 	 * @Field[name=update_time]
 	 * @var [type]
 	 */
-	public $update_time
+	public $update_time;
+
 	/**
-	 * @Field[name=hard_image]
+	 * @Field[name=head_image]
 	 * @var [type]
-	 */;
-	public $hard_image
+	 */
+	public $head_image;
+
 	/**
 	 * @Field[name=sex]
 	 * @var [type]
-	 */;
+	 */
 	public $sex;
 }
