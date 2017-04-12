@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:33:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-10 23:16:56
+ * @Last Modified time: 2017-04-12 08:14:07
  */
 namespace App\Controller\Oauth;
 
@@ -28,8 +28,6 @@ class OauthController
 {
 	public function passwordOauth(ServerRequestInterface $request,ResponseInterface $response,array $args){
 		$server=$this->getOauthService();
-        $jsonData=json_decode($request->getBody()->getContents(),true);
-        $request=$request->withParsedBody($jsonData);
 		try {
             // Try to respond to the access token request
             return $server->respondToAccessTokenRequest($request, $response);

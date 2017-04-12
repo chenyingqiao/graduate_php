@@ -3,11 +3,12 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-11 08:26:02
+ * @Last Modified time: 2017-04-12 08:11:55
  */
 namespace App\Controller\Route;
 
 use App\Controller\Oauth\OauthController;
+use App\Middleware\JsonRequestBodyDecodeMiddleware;
 use App\Oauth\Repositories\AccessTokenRepository;
 use League\Container\Container;
 use League\OAuth2\Server\Middleware\ResourceServerMiddleware;
@@ -87,7 +88,8 @@ class MyRoute
 			    return $response;
 			});
 		})->setStrategy(new JsonStrategy)
-		->middleware(new Cors($this->corsSetting));
+		->middleware(new Cors($this->corsSetting))
+		->middleware(new JsonRequestBodyDecodeMiddleware());
 		
 	}
 
