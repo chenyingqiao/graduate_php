@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 11:47:50
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-09 17:37:09
+ * @Last Modified time: 2017-04-15 16:01:34
  */
 namespace App\Model;
 
@@ -19,6 +19,7 @@ class UserEntity extends DbUnit implements UserEntityInterface
 	use EntityTrait;
 	/**
 	 * @Field[name=id,type=int]
+	 * @Primary
 	 * @var [type]
 	 */
 	public $id;
@@ -46,6 +47,13 @@ class UserEntity extends DbUnit implements UserEntityInterface
 	 * @var [type]
 	 */
 	public $update_time;
+
+	/**
+	 * @Field[name=role]
+	 * 1 普通用户 2:超级管理员
+	 * @var [type]
+	 */
+	public $role;
 
 	/**
 	 * @Field[name=head_image]

@@ -3,7 +3,7 @@
  * @Author: lerko
  * @Date:   2017-04-06 19:36:41
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-08 16:35:45
+ * @Last Modified time: 2017-04-15 11:06:04
  */
 namespace App\Oauth\Db\Traits;
 
@@ -28,6 +28,9 @@ trait TokenTrait{
      */
     public function getScopes()
     {
+        if(!$this->scopes){
+            return null;
+        }
         return array_values($this->scopes);
     }
 

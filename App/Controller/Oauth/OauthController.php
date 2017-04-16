@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:33:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-12 08:14:07
+ * @Last Modified time: 2017-04-13 22:16:27
  */
 namespace App\Controller\Oauth;
 
@@ -50,6 +50,7 @@ class OauthController
                 "success"=>true
             ];
         $response->getBody()->write(json_encode($json));
+        $response->withStatus(204,"No Content");
         return $response;
     }
 

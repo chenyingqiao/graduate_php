@@ -24,7 +24,9 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     {
         $accessTokenEntity->client_id=$accessTokenEntity->client->id;
         $accessTokenEntity->expiry_time=$accessTokenEntity->ExpiryDateTime->format('Y-m-d H:i:s');
-        $accessTokenEntity->scope=array_keys($accessTokenEntity->scopes)[0];
+        if(isset($accessTokenEntity->scope)){
+            $accessTokenEntity->scope=array_keys($accessTokenEntity->scopes)[0];
+        }
         $effect=$accessTokenEntity->insert();
         if($effect)
             return $accessTokenEntity;

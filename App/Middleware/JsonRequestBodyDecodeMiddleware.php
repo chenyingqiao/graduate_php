@@ -4,12 +4,15 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-11 20:50:05
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-12 08:13:33
+ * @Last Modified time: 2017-04-16 11:28:08
  */
 namespace App\Middleware;
 
-use Psr\Http\Message\RequestInterface;
+use App\Oauth\Db\AccessTokenEntity;
+use Lcobucci\JWT\Parser;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\JsonResponse;
 
 
 /**
@@ -18,12 +21,26 @@ use Psr\Http\Message\ResponseInterface;
 class JsonRequestBodyDecodeMiddleware
 {
 	
-	public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next)
+	public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
 	{
-		$jsonData=json_decode($request->getBody()->getContents(),true);
-		if($jsonData===false){//不是json数据的话
+		$content=$request->getBody()->getContents();
+		$jsonData=json_decode($content,true);
+		//获取user_id
+		if($request->hasHeader('authorization')){
+			$authorization=$request->getCookieParams()['token'];
+			$token = (new Parser())->parse($authorization)->getClaim('jti');//从加密string中获取token
+			$AccessTokenEntity=new AccessTokenEntity();
+			$user_id=$AccessTokenEntity->whereEq("access_token_id",$token)->find("user_id");
+			if(empty($user_id)){
+				return new JsonResponse(["error_msg"=>"用户不存在"],422);
+			}
+			$request=$request->withAttribute("user_id",$user_id);
+		}
+		if(empty($jsonData)){//不是json数据的话
 			return $next($request,$response);
 		}
+		$body= $request->getParsedBody();
+		$jsonData=array_merge($body,$jsonData);
         $request=$request->withParsedBody($jsonData);
         return $next($request,$response);
 	}

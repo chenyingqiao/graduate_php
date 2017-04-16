@@ -3,12 +3,18 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-12 08:11:55
+ * @Last Modified time: 2017-04-16 14:46:46
  */
 namespace App\Controller\Route;
 
 use App\Controller\Oauth\OauthController;
+use App\Controller\User\ArticleController;
+use App\Controller\User\CommentController;
+use App\Controller\User\UserController;
 use App\Middleware\JsonRequestBodyDecodeMiddleware;
+use App\Middleware\OptionsMethodMiddleware;
+use App\Middleware\UserLoginMiddleware;
+use App\Middleware\ValidateMiddleware;
 use App\Oauth\Repositories\AccessTokenRepository;
 use League\Container\Container;
 use League\OAuth2\Server\Middleware\ResourceServerMiddleware;
@@ -20,11 +26,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\Cors;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
-* 
+* middleware执行顺序是从下网上执行
 */
 class MyRoute
 {
@@ -62,7 +69,10 @@ class MyRoute
 	 */
 	public function Common(){
 		$this->route->map('GET', '/', function (ServerRequestInterface $request, ResponseInterface $response) {
-		    $response->getBody()->write('<h1>Hello, World121212!</h1>');
+			// $response->withStatus(204,"No Content");
+		 //    $response->getBody()->write('<h1>Hello, World121212!</h1>');
+		 	
+		 	$response = new JsonResponse(["ying"=>11], 404, [ 'Content-Type' => ['application/hal+json']]);
 		    return $response;
 		});
 
@@ -70,8 +80,8 @@ class MyRoute
 		    $response->getBody()->write("Hello, World! /user/");
 		    return $response;
 		})->setStrategy(new ApplicationStrategy())
-		->middleware(new Cors($this->corsSetting))
-		->middleware(new ResourceServerMiddleware($this->container->get("resourceServer")));
+		->middleware(new ResourceServerMiddleware($this->container->get("resourceServer")))
+		->middleware(new Cors($this->corsSetting));
 	}
 
 	/**
@@ -82,23 +92,56 @@ class MyRoute
 	public function Oauth(){
 		$OauthController=new OauthController();
 		$this->route->group('/auth',function($route) use ($OauthController){
-			$route->post("/local",[$OauthController,'passwordOauth']);
-			$route->options("/local",function (ServerRequestInterface $request, ResponseInterface $response) {
-			    $response->withStatus(204,"No Content");
-			    return $response;
-			});
+			$route->map(['POST',"OPTIONS"],"/local",[$OauthController,'passwordOauth']);
 		})->setStrategy(new JsonStrategy)
-		->middleware(new Cors($this->corsSetting))
-		->middleware(new JsonRequestBodyDecodeMiddleware());
+		->middleware(new JsonRequestBodyDecodeMiddleware())
+		->middleware(new Cors($this->corsSetting));
 		
 	}
 
 	public function User()
 	{
 		$OauthController=new OauthController();
-		$this->route->group('/users',function($route) use ($OauthController){
-			$route->get("/snsLogins",[$OauthController,'snsLogins']);
+		$UserController=new UserController();
+		$this->route->group('/users',function($route) use ($OauthController,$UserController){
+			$route->map(["GET","OPTIONS"],"/snsLogins",[$OauthController,'snsLogins']);
+			$route->map(["GET","OPTIONS"],"/register",[$UserController,'register']);
+			$route->map(["GET","OPTIONS"],"/me",[$UserController,'me']);
 		})->setStrategy(new JsonStrategy)
+		->middleware(new ValidateMiddleware())
+		->middleware(new JsonRequestBodyDecodeMiddleware())
+		->middleware(new OptionsMethodMiddleware())
+		->middleware(new Cors($this->corsSetting));//Cors中间件
+	}
+
+	public function Article(){
+		$ArticleController=new ArticleController();
+		$this->route->group('/article',function($route) use ($ArticleController){
+			$route->map(["GET","OPTIONS"],"/getIndexImage",[$ArticleController,"getIndexImage"]);
+			$route->map(["GET","OPTIONS"],"/getFrontArticleList",[$ArticleController,"getFrontArticleList"]);
+			//获取下一个文章的标题
+			$route->map(["GET","OPTIONS"],"/{id:number}/getPrenext",[$ArticleController,"getPrenext"]);
+			//获取文章详细内容
+			$route->map(["GET","OPTIONS"],"/{id:number}/getFrontArticle",[$ArticleController,"getFrontArticle"]);
+			$route->map(["POST","OPTIONS"],"/addArticle",[$ArticleController,"addArticle"]);
+		})->setStrategy(new JsonStrategy)
+		->middleware(new ValidateMiddleware())
+		->middleware(new JsonRequestBodyDecodeMiddleware())
+		->middleware(new OptionsMethodMiddleware())
+		->middleware(new Cors($this->corsSetting));//Cors中间件
+	}
+
+	public function Comment(){
+		$CommentController=new CommentController();
+		$this->route->group("/comment",function($route) use ($CommentController){
+			$route->map(["POST","OPTIONS"],"/addNewComment",[$CommentController,"addNewComment"]);
+			//获取评论列表
+			$route->map(["GET","OPTIONS"],"/{aid:number}/getFrontCommentList",[$CommentController,"getFrontCommentList"]);
+			$route->map(["POST","OPTIONS"],"/{comment_id:number}/addNewReply",[$CommentController,"addNewReply"]);
+		})->setStrategy(new JsonStrategy)
+		->middleware(new ValidateMiddleware())
+		->middleware(new JsonRequestBodyDecodeMiddleware())
+		->middleware(new OptionsMethodMiddleware())
 		->middleware(new Cors($this->corsSetting));
 	}
 
