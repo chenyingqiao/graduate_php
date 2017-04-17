@@ -3,10 +3,11 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 14:46:46
+ * @Last Modified time: 2017-04-17 22:53:08
  */
 namespace App\Controller\Route;
 
+use App\Controller\Editor\EditorController;
 use App\Controller\Oauth\OauthController;
 use App\Controller\User\ArticleController;
 use App\Controller\User\CommentController;
@@ -143,6 +144,12 @@ class MyRoute
 		->middleware(new JsonRequestBodyDecodeMiddleware())
 		->middleware(new OptionsMethodMiddleware())
 		->middleware(new Cors($this->corsSetting));
+	}
+
+	public function Editor()
+	{
+		$EditorController=new EditorController();
+		$this->route->map('GET',"/editor",[$EditorController,"editormd"]);
 	}
 
 	public function dispatch(){

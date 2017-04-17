@@ -3,7 +3,7 @@
  * @Author: lerko
  * @Date:   2017-03-27 13:46:27
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 12:17:02
+ * @Last Modified time: 2017-04-17 21:20:33
  */
 require "vendor/autoload.php";
 
@@ -23,4 +23,5 @@ $myRoute->Oauth();
 $myRoute->User();
 $myRoute->Article();
 $myRoute->Comment();
+$myRoute->Editor();
 $myRoute->dispatch();

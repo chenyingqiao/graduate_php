@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-16 23:21:18
+* @Last Modified time: 2017-04-17 22:35:41
 */
 show tables;
 
@@ -11,13 +11,16 @@ show create table user_operation_log;
 select * from user_operation_log;
 
 show create table blog;
-select * from blog;
+select id,uid,title from blog;
 select `blog`.`id`,`blog`.`title`,`blog`.`discreption`,`blog`.`content`,`blog`.`create_time`,`blog`.`update_time`,`blog`.`cat_id` from blog where  `blog`.`title` = 'sdfsdf' limit 1;
 {
+truncate table blog;
 delete from blog where `blog`.`title` = 'sdfsdf';
-	-- drop table blog;
+	drop table blog;
 	CREATE TABLE IF NOT EXISTS `blog`.`blog` (
 	  `id` INT NOT NULL AUTO_INCREMENT,
+	  `uid` INT NOT NULL DEFAULT 0,
+	  `markdown` TEXT NULL,
 	  `title` VARCHAR(45) NULL,
 	  `discreption` VARCHAR(45) NULL,
 	  `content` TEXT NULL,

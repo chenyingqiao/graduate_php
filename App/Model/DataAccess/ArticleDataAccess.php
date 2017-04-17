@@ -7,7 +7,7 @@ use App\Model\BlogEntity;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 22:09:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 23:25:53
+ * @Last Modified time: 2017-04-17 22:29:47
  */
 
 /**
@@ -31,8 +31,11 @@ class ArticleDataAccess
 			$Blog->update_time=time();
 			$Blog->create_time=time();
 			$Blog->id=false;
+			$Blog->uid=$data['user_id'];
+			$Blog->markdown=$data['markdown'];
 			$effect=$Blog->insert();
 		}else{
+			$Blog->uid=$data['user_id'];
 			$Blog->update_time=time();
 			$effect=$Blog->whereEq("id",$data['id'])->update();
 		}

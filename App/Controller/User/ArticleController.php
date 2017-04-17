@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 22:25:03
+ * @Last Modified time: 2017-04-17 21:33:37
  */
 namespace App\Controller\User;
 
@@ -129,6 +129,7 @@ class ArticleController
 	public function addArticle(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
 		$data=$request->getParsedBody();
+		$data['user_id']=$request->getAttribute("user_id");
 		$effect=ArticleDataAccess::addArticle($data);
 		if($effect[0]){
 			return new JsonResponse([
