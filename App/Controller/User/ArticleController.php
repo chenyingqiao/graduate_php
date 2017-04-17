@@ -3,11 +3,12 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 11:34:30
+ * @Last Modified time: 2017-04-16 22:25:03
  */
 namespace App\Controller\User;
 
 use App\Model\BlogEntity;
+use App\Model\DataAccess\ArticleDataAccess;
 use App\Model\UserEntity;
 use App\Tool\Tool;
 use Psr\Http\Message\ResponseInterface;
@@ -128,13 +129,18 @@ class ArticleController
 	public function addArticle(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
 		$data=$request->getParsedBody();
-		$Blog=new BlogEntity($data);
-		$Blog->update_time=time();
-		$Blog->create_time=time();
-		$effect=$Blog->insert();
-		if($effect){
+		$effect=ArticleDataAccess::addArticle($data);
+		if($effect[0]){
 			return new JsonResponse([
-					"status"=>true
+					"msg"=>"",
+					"status"=>true,
+					"id"=>ArticleDataAccess::getIdByTitle($data['title'])
+				]);
+		}else{
+			return new JsonResponse([
+					"msg"=>$effect[1],
+					"status"=>false,
+					"id"=>-1
 				]);
 		}
 		return new JsonResponse(["error_msg"=>"添加出错".$Blog->error()],422);
