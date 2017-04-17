@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-12 21:08:20
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-15 14:51:58
+ * @Last Modified time: 2017-04-17 23:33:50
  */
 namespace App\Controller\User;
 
@@ -22,7 +22,7 @@ class UserController
 		$UserEntity->password=password_hash($parsedBody['password'],PASSWORD_DEFAULT);
 		$effect=$UserEntity->insert();
 		if($effect)
-			return new JsonResponse();
+			return new JsonResponse([]);
 		else
 			return new JsonResponse(['error_msg'=>"注册失败"],422);
 	}

@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-17 22:35:41
+* @Last Modified time: 2017-04-17 23:34:29
 */
 show tables;
 
@@ -69,6 +69,7 @@ select * from table blog_like;
 }
 
 show create table user;
+truncate table user;
 select * from user;
 {
 	delete from user where username is null;
