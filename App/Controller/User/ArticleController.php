@@ -3,11 +3,12 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 11:34:30
+ * @Last Modified time: 2017-04-18 08:14:21
  */
 namespace App\Controller\User;
 
 use App\Model\BlogEntity;
+use App\Model\DataAccess\ArticleDataAccess;
 use App\Model\UserEntity;
 use App\Tool\Tool;
 use Psr\Http\Message\ResponseInterface;
@@ -128,17 +129,39 @@ class ArticleController
 	public function addArticle(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
 		$data=$request->getParsedBody();
-		$Blog=new BlogEntity($data);
-		$Blog->update_time=time();
-		$Blog->create_time=time();
-		$effect=$Blog->insert();
-		if($effect){
+		$data['user_id']=$request->getAttribute("user_id");
+		$effect=ArticleDataAccess::addArticle($data);
+		if($effect[0]){
 			return new JsonResponse([
-					"status"=>true
+					"msg"=>"",
+					"status"=>true,
+					"id"=>ArticleDataAccess::getIdByTitle($data['title'])
+				]);
+		}else{
+			return new JsonResponse([
+					"msg"=>$effect[1],
+					"status"=>false,
+					"id"=>-1
 				]);
 		}
 		return new JsonResponse(["error_msg"=>"添加出错".$Blog->error()],422);
 	}
 
+	/**
+	 * 删除文章
+	 * @Author   Lerko
+	 * @DateTime 2017-04-18T08:14:17+0800
+	 * @param    ServerRequestInterface   $request  [description]
+	 * @param    ResponseInterface        $response [description]
+	 * @param    array                    $args     [description]
+	 * @return   [type]                             [description]
+	 */
+	public function deleteArticle(ServerRequestInterface $request,ResponseInterface $response,array $args){
+		$effect=ArticleDataAccess::deleteArticle($args['aid']);
+		if($effect){
+			return new JsonResponse(['msg'=>"删除成功","status"=>false]);
+		}
+		return new JsonResponse(['msg'=>"删除失败","status"=>true],422);
+	}
 
 }

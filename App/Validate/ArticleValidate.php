@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 16:34:44
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-15 17:51:37
+ * @Last Modified time: 2017-04-17 21:32:19
  */
 
 /**
@@ -41,4 +41,5 @@ class ArticleValidate
 			return [true];
 		}
 	}
+
 }

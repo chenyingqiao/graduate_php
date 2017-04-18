@@ -7,7 +7,7 @@ use Phero\Database\DbUnit;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 15:11:16
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-15 16:01:23
+ * @Last Modified time: 2017-04-17 22:29:13
  */
 
 //show create table blog;
@@ -22,6 +22,16 @@ class BlogEntity extends DbUnit{
 	 * @var [type]
 	 */
 	public $id;
+	/**
+	 * @Field[name=uid]
+	 * @var [type]
+	 */
+	public $uid;
+	/**
+	 * @Field[name=markdown]
+	 * @var [type]
+	 */
+	public $markdown;
 	/**
 	 * @Field[name=title]
 	 * @var [type]

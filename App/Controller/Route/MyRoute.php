@@ -3,10 +3,11 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 14:46:46
+ * @Last Modified time: 2017-04-17 23:29:19
  */
 namespace App\Controller\Route;
 
+use App\Controller\Editor\EditorController;
 use App\Controller\Oauth\OauthController;
 use App\Controller\User\ArticleController;
 use App\Controller\User\CommentController;
@@ -90,11 +91,14 @@ class MyRoute
 	 * @DateTime 2017-04-09T13:37:21+0800
 	 */
 	public function Oauth(){
+		$UserController=new UserController();
 		$OauthController=new OauthController();
-		$this->route->group('/auth',function($route) use ($OauthController){
+		$this->route->group('/auth',function($route) use ($OauthController,$UserController){
 			$route->map(['POST',"OPTIONS"],"/local",[$OauthController,'passwordOauth']);
+			$route->map(["POST","OPTIONS"],"/register",[$UserController,'register']);
 		})->setStrategy(new JsonStrategy)
 		->middleware(new JsonRequestBodyDecodeMiddleware())
+		->middleware(new OptionsMethodMiddleware())
 		->middleware(new Cors($this->corsSetting));
 		
 	}
@@ -105,7 +109,6 @@ class MyRoute
 		$UserController=new UserController();
 		$this->route->group('/users',function($route) use ($OauthController,$UserController){
 			$route->map(["GET","OPTIONS"],"/snsLogins",[$OauthController,'snsLogins']);
-			$route->map(["GET","OPTIONS"],"/register",[$UserController,'register']);
 			$route->map(["GET","OPTIONS"],"/me",[$UserController,'me']);
 		})->setStrategy(new JsonStrategy)
 		->middleware(new ValidateMiddleware())
@@ -143,6 +146,12 @@ class MyRoute
 		->middleware(new JsonRequestBodyDecodeMiddleware())
 		->middleware(new OptionsMethodMiddleware())
 		->middleware(new Cors($this->corsSetting));
+	}
+
+	public function Editor()
+	{
+		$EditorController=new EditorController();
+		$this->route->map('GET',"/editor",[$EditorController,"editormd"]);
 	}
 
 	public function dispatch(){

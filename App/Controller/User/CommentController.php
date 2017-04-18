@@ -14,7 +14,7 @@ use Zend\Diactoros\Response\JsonResponse;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 21:25:40
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 15:45:08
+ * @Last Modified time: 2017-04-17 22:57:13
  */
 
 /**
@@ -47,6 +47,7 @@ class CommentController
 					"success"=>true,
 					"data"=>[
 						"__v"=>0,
+						"_id"=>$CommentEntity->getLastId(),
 						"aid"=>$param['aid'],
 						"content"=>$param['content'],
 						"created"=>Tool::getInstanct()->date_format_iso8601($CommentEntity->create_time),

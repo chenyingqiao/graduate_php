@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 14:37:39
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 14:41:04
+ * @Last Modified time: 2017-04-17 21:33:31
  */
 
 namespace App\Middleware;
@@ -20,7 +20,7 @@ class UserLoginMiddleware{
 	{
 		$UserId=$request->getAttribute("user_id");
 		if(empty($UserId)){
-			return new JsonResponse(["error_msg"=>"无法获取用户数据"],422);
+			return new JsonResponse(["error_msg"=>"无法获取用户数据,您还没有登陆"],422);
 		}
 		return $next($request,$response);
 	}
