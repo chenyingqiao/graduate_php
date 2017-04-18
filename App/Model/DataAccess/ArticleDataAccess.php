@@ -7,7 +7,7 @@ use App\Model\BlogEntity;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 22:09:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-18 07:44:59
+ * @Last Modified time: 2017-04-19 00:31:46
  */
 
 /**
@@ -26,20 +26,21 @@ class ArticleDataAccess
 			return [false,"标题或者内容为空"];
 		}
 		$Blog=new BlogEntity($data);
-		$HasBlog=$Blog->whereEq("title",$data['title'])->whereEq('id',$data['id'])->find();
-		if(empty($HasBlog)&&$data['id']==-1){
+		// $HasBlog=$Blog->whereEq("title",$data['title'])->whereEq('id',$data['id'])->find();
+		$HasBlog=$Blog->whereEq("title",$data['title'])->find();
+		if(empty($HasBlog)){
 			$Blog->update_time=time();
 			$Blog->create_time=time();
-			$Blog->id=false;
 			$Blog->uid=$data['user_id'];
+			$Blog->id=null;
 			$Blog->markdown=$data['markdown'];
 			$effect=$Blog->insert();
 		}else{
-			$Blog->uid=$data['user_id'];
-			$Blog->update_time=time();
-			$effect=$Blog->whereEq("id",$data['id'])->update();
+			$Blog=new BlogEntity($data);
+			$Blog->id=$HasBlog['id'];
+			$effect=$Blog->whereEq("id",$HasBlog['id'])->update();
 		}
-		if($effect){
+		if($effect||$effect===0){
 			return [true];
 		}
 		return [false,"保存或者更新失败".$Blog->error().$Blog->sql()];
@@ -70,5 +71,16 @@ class ArticleDataAccess
 	public static function deleteArticle($aid)
 	{
 		return (new BlogEntity())->whereEq("id",$aid)->delete();
+	}
+
+	public function like($aid)
+	{
+		$Blog=new BlogEntity();
+		$Blog->like=$Blog->whereEq("id",$aid)->find("like")+1;
+		$effect=$Blog->whereEq("id",$aid)->update();
+		if($effect){
+			return $Blog->like;
+		}
+		return false;
 	}
 }

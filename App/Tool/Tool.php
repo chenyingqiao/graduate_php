@@ -5,7 +5,7 @@ namespace App\Tool;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 15:23:40
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 14:12:14
+ * @Last Modified time: 2017-04-18 23:09:14
  */
 
 /**
@@ -34,7 +34,7 @@ class Tool
 	}
 
 	public function date_format_iso8601($value){
-		$date = new \DateTime('20130422122037');
-		return $date->format('c');
+		$date = new \DateTime(date("Y-m-d h:i:s",$value));
+		return $date->format(\DateTime::ATOM); // Updated ISO8601
 	}
 }

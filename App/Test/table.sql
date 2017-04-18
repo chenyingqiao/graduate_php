@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-17 23:34:29
+* @Last Modified time: 2017-04-19 00:20:48
 */
 show tables;
 
@@ -11,8 +11,10 @@ show create table user_operation_log;
 select * from user_operation_log;
 
 show create table blog;
-select id,uid,title from blog;
-select `blog`.`id`,`blog`.`title`,`blog`.`discreption`,`blog`.`content`,`blog`.`create_time`,`blog`.`update_time`,`blog`.`cat_id` from blog where  `blog`.`title` = 'sdfsdf' limit 1;
+delete from blog where id=-1;
+delete from blog where title is null;
+select id,uid,title,visit_count,create_time from blog;
+select `blog`.`id`,`blog`.`uid`,`blog`.`markdown`,`blog`.`title`,`blog`.`discreption`,`blog`.`content`,`blog`.`create_time`,`blog`.`update_time`,`blog`.`cat_id`,`blog`.`visit_count`,`blog`.`tag_id` from blog order by blog.visit_count asc limit 0,10;
 {
 truncate table blog;
 delete from blog where `blog`.`title` = 'sdfsdf';
@@ -27,6 +29,9 @@ delete from blog where `blog`.`title` = 'sdfsdf';
 	  `create_time` VARCHAR(45) NULL,
 	  `update_time` VARCHAR(45) NULL,
 	  `cat_id` VARCHAR(45) NULL,
+	  `visit_count` INT(11) DEFAULT 0,
+	  `tag_id` INT(11) DEFAULT 0,
+	  `like` INT(11) DEFAULT 0,
 	  PRIMARY KEY (`id`),
 	  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
 	  INDEX `title_SERCHER` USING BTREE (`title` ASC) )

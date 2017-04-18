@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-17 23:29:19
+ * @Last Modified time: 2017-04-18 22:55:41
  */
 namespace App\Controller\Route;
 
@@ -127,6 +127,8 @@ class MyRoute
 			//获取文章详细内容
 			$route->map(["GET","OPTIONS"],"/{id:number}/getFrontArticle",[$ArticleController,"getFrontArticle"]);
 			$route->map(["POST","OPTIONS"],"/addArticle",[$ArticleController,"addArticle"]);
+			$route->map(["POST","OPTIONS"],"/{aid:number}/deleteArticle",[$ArticleController,"deleteArticle"]);
+			$route->map(["PUT","OPTIONS"],"/{aid:number}/toggleLike",[$ArticleController,"toggleLike"]);
 		})->setStrategy(new JsonStrategy)
 		->middleware(new ValidateMiddleware())
 		->middleware(new JsonRequestBodyDecodeMiddleware())
