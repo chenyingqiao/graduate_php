@@ -7,7 +7,7 @@ use App\Model\BlogEntity;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 22:09:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-17 22:29:47
+ * @Last Modified time: 2017-04-18 07:44:59
  */
 
 /**
@@ -26,7 +26,7 @@ class ArticleDataAccess
 			return [false,"标题或者内容为空"];
 		}
 		$Blog=new BlogEntity($data);
-		$HasBlog=$Blog->whereEq("title",$data['title'])->find();
+		$HasBlog=$Blog->whereEq("title",$data['title'])->whereEq('id',$data['id'])->find();
 		if(empty($HasBlog)&&$data['id']==-1){
 			$Blog->update_time=time();
 			$Blog->create_time=time();
@@ -58,5 +58,17 @@ class ArticleDataAccess
 			return -1;
 		}
 		return $id;
+	}
+
+	/**
+	 * 删除文章
+	 * @Author   Lerko
+	 * @DateTime 2017-04-18T07:44:55+0800
+	 * @param    [type]                   $aid [description]
+	 * @return   [type]                        [description]
+	 */
+	public static function deleteArticle($aid)
+	{
+		return (new BlogEntity())->whereEq("id",$aid)->delete();
 	}
 }
