@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-18 08:14:21
+ * @Last Modified time: 2017-04-18 23:42:36
  */
 namespace App\Controller\User;
 
@@ -29,8 +29,9 @@ class ArticleController
 	 */
 	public function getIndexImage(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
+		$id=rand(1,3);
 		return new JsonResponse([
-				"img"=>"https://upload.jackhu.top/blog/index/great-wall-201471_1280.jpg-600x1500q80",
+				"img"=>"http://api-lerko.ngrok.cc/UploadFile/{$id}.jpg",
 				"success"=>true
 			]);
 	}
@@ -46,16 +47,22 @@ class ArticleController
 		$queryParam=$request->getQueryParams();
 		$currentPage=$request->getAttribute("currentPage");
 		$itemsPerPage=$request->getAttribute("itemsPerPage");
+		$sortName=$request->getAttribute("sortName");
+		if($sortName=="publish_time"){
+			$sortName="create_time";
+		}else{
+			$sortName="visit_count";
+		}
 		$Blog=new BlogEntity();
-		$data=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage)->select();
+		$data=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage)->order($sortName)->select();
 		$result=[];
 		foreach ($data as $key => $value) {
 			$result["data"][]=[
 				"_id"=>$value['id'],
 				"title"=>$value['title'],
-				"publish_time"=>"2016-10-13T11:50:53.416Z",
-				"like_count"=>11,
-				"comment_count"=>22,
+				"publish_time"=>Tool::date_format_iso8601($value['create_time']),
+				"like_count"=>$value['like'],
+				"comment_count"=>rand(1,50),
 				"images"=>[]
 			];
 		}
@@ -75,15 +82,19 @@ class ArticleController
 	{
 		$Blog=new BlogEntity();
 		$prev=$Blog->whereEq("id",$args['id']-1)->find();
-		$prev=[
-			"_id"=>$prev['id'],
-			"title"=>$prev['title']
-		];
+		if(!empty($prev)){
+			$prev=[
+				"_id"=>$prev['id'],
+				"title"=>$prev['title']
+			];
+		}
 		$next=$Blog->whereEq("id",$args['id']+1)->find();
-		$next=[
-			"_id"=>$next['id'],
-			"title"=>$next['title']
-		];
+		if(!empty($next)){
+			$next=[
+				"_id"=>$next['id'],
+				"title"=>$next['title']
+			];
+		}
 		return new JsonResponse([
 				"data"=>[
 					"next"=>$next,
@@ -106,13 +117,15 @@ class ArticleController
 	{
 		$Blog=new BlogEntity();
 		$data=$Blog->whereEq("id",$args['id'])->find();
+		$Blog->visit_count=$data['visit_count']+1;
+		$Blog->update();
 		return new JsonResponse([
 				"data"=>[
 					"_id"=>$data['id'],
 					"title"=>$data['title'],
-					"publish_time"=>"2016-10-13T11:50:53.416Z",
-					"like_count"=>11,
-					"comment_count"=>22,
+					"publish_time"=>Tool::date_format_iso8601($data['create_time']),
+					"like_count"=>$data['like'],
+					"comment_count"=>rand(1,50),
 					"content"=>$data['content']
 				]
 			]);
@@ -141,7 +154,7 @@ class ArticleController
 			return new JsonResponse([
 					"msg"=>$effect[1],
 					"status"=>false,
-					"id"=>-1
+					"id"=>$data['id']
 				]);
 		}
 		return new JsonResponse(["error_msg"=>"添加出错".$Blog->error()],422);
@@ -162,6 +175,24 @@ class ArticleController
 			return new JsonResponse(['msg'=>"删除成功","status"=>false]);
 		}
 		return new JsonResponse(['msg'=>"删除失败","status"=>true],422);
+	}
+
+	/**
+	 * {"success":true,"count":7,"isLike":true}
+	 * @Author   Lerko
+	 * @DateTime 2017-04-18T22:36:24+0800
+	 * @param    ServerRequestInterface   $request  [description]
+	 * @param    ResponseInterface        $response [description]
+	 * @param    array                    $args     [description]
+	 * @return   [type]                             [description]
+	 */
+	public function toggleLike(ServerRequestInterface $request,ResponseInterface $response,array $args)
+	{
+		$effect=ArticleDataAccess::like($args['aid']);
+		if($effect){
+			return new JsonResponse(['count'=>$effect,"success"=>false,"isLike"=>true]);
+		}
+		return new JsonResponse(['count'=>$effect,"success"=>false,"isLike"=>false],422);
 	}
 
 }

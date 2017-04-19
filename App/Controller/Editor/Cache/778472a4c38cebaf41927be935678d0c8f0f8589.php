@@ -17,7 +17,8 @@
         <script type="text/javascript">
             var testEditor;
             $(function() {
-                $.get("editor?aid=<?php echo e($aid); ?>",function(md){
+
+                $.get("editor<?php echo e(isset($aid)&&$aid!=-1?'?aid='.$aid:''); ?>",function(md){
                     testEditor = editormd("test-editormd", {
                         width: "90%",
                         height: 740,
@@ -51,6 +52,7 @@
                         onload : function() {
                             console.log('onload', this);
                             this.fullscreen();
+                            alert("ctrl+s 保存 \nctrl+alt+q 退出 \n更换标题就可以新建文章！")
                         }
                     });
                 });
