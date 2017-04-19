@@ -3,8 +3,8 @@
 /**
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-11 20:50:05
- * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 11:28:08
+ * @Last Modified by:   lerko
+ * @Last Modified time: 2017-04-18 18:02:01
  */
 namespace App\Middleware;
 
@@ -16,7 +16,8 @@ use Zend\Diactoros\Response\JsonResponse;
 
 
 /**
-* 
+* 转换jsondata
+* password grand的验证方式吧token当成session来使用
 */
 class JsonRequestBodyDecodeMiddleware
 {
