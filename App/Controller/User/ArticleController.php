@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-18 23:42:36
+ * @Last Modified time: 2017-04-19 08:44:36
  */
 namespace App\Controller\User;
 
@@ -45,16 +45,16 @@ class ArticleController
 	 */
 	public function getFrontArticleList(ServerRequestInterface $request,ResponseInterface $response,array $args){
 		$queryParam=$request->getQueryParams();
-		$currentPage=$request->getAttribute("currentPage");
-		$itemsPerPage=$request->getAttribute("itemsPerPage");
-		$sortName=$request->getAttribute("sortName");
+		$currentPage=$queryParam["currentPage"];
+		$itemsPerPage=$queryParam["itemsPerPage"];
+		$sortName=$queryParam["sortName"];
 		if($sortName=="publish_time"){
 			$sortName="create_time";
 		}else{
 			$sortName="visit_count";
 		}
 		$Blog=new BlogEntity();
-		$data=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage)->order($sortName)->select();
+		$data=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage)->order($sortName,"DESC")->select();
 		$result=[];
 		foreach ($data as $key => $value) {
 			$result["data"][]=[
