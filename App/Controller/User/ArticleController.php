@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-23 22:26:00
+ * @Last Modified time: 2017-04-29 16:48:35
  */
 namespace App\Controller\User;
 
@@ -57,9 +57,13 @@ class ArticleController
 		}
 		$Blog=new BlogEntity();
 		$entity=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage);
-		if($key_word) $entity->whereLike("title","%".$key_word."%");
+		if($key_word) $entity->whereLike("title",'%'.$key_word)
+			->whereOrLike("title",$key_word.'%')
+			->whereOrLike("markdown",'%'.$key_word)
+			->whereOrLike("markdown",$key_word.'%');
 		if($sortName=='my') $entity->whereEq('uid',$request->getAttribute("user_id"));
 		$data=$entity->order($sortName,"DESC")->select();
+		$xdebug_sql=$entity->sql();
 		$result=["data"=>[]];
 		foreach ($data as $key => $value) {
 			$result["data"][]=[

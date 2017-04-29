@@ -2,9 +2,10 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-23 21:59:22
+* @Last Modified time: 2017-04-29 14:29:01
 */
 show tables;
+show create table admin_users;
 
 
 show create table user_operation_log;
@@ -89,6 +90,8 @@ select * from user;
 	  `role` INT(3) DEFAULT 1,
 	  `head_image` TEXT NULL,
 	  `sex` TINYINT(1) NULL,
+	  `phone_number` VARCHAR(45) NULL,
+	  `email` VARCHAR(45) NULL,
 	  PRIMARY KEY (`id`),
 	  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 	ENGINE = InnoDB
