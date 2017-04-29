@@ -4,7 +4,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-11 20:50:05
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 11:28:08
+ * @Last Modified time: 2017-04-22 14:30:30
  */
 namespace App\Middleware;
 
@@ -27,8 +27,9 @@ class JsonRequestBodyDecodeMiddleware
 		$jsonData=json_decode($content,true);
 		//获取user_id
 		if($request->hasHeader('authorization')){
-			$authorization=$request->getCookieParams()['token'];
-			$token = (new Parser())->parse($authorization)->getClaim('jti');//从加密string中获取token
+			$header = $request->getHeader('authorization');
+        	$jwt = trim(preg_replace('/^(?:\s+)?Bearer\s/', '', $header[0]));
+			$token = (new Parser())->parse($jwt)->getClaim('jti');//从加密string中获取token
 			$AccessTokenEntity=new AccessTokenEntity();
 			$user_id=$AccessTokenEntity->whereEq("access_token_id",$token)->find("user_id");
 			if(empty($user_id)){

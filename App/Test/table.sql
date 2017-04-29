@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-19 10:55:28
+* @Last Modified time: 2017-04-23 21:59:22
 */
 show tables;
 
@@ -44,6 +44,7 @@ delete from blog where `blog`.`title` = 'sdfsdf';
 
 show create table cat;
 select * from cat;
+insert into cat values (1,"test",1),(2,"test",1),(3,"test",1);
 
 --关联图片和博客的表
 show create table image_blog_ref;
@@ -60,7 +61,7 @@ select * from image_blog_ref;
 }
 
 show create table blog_like;
-select * from table blog_like;
+select * from blog_like;
 {
 	drop table blog_like;
 	CREATE TABLE IF NOT EXISTS `blog`.`blog_like` (
@@ -97,7 +98,6 @@ select * from user;
 
 show create table comment;
 select * from comment;
-delete from comment where uid is null;
 {
 	drop table comment;
 	CREATE TABLE IF NOT EXISTS `blog`.`comment` (
@@ -114,6 +114,7 @@ delete from comment where uid is null;
 	DEFAULT CHARACTER SET = utf8
 }
 
+-- 图片存储中心
 show create table image_warehouse;
 select * from image_warehouse;
 {
@@ -148,6 +149,7 @@ select * from image_warehouse;
 
 	show create table access_token;
 	select * from access_token;
+	truncate table access_token;
 	{
 		drop table access_token;
 		CREATE TABLE `access_token` (
@@ -180,6 +182,3 @@ select * from image_warehouse;
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
 	}
 }
-
-select * from access_token;
-select * from access_token where access_token_id='2d535032f5b5576dda366ba8340deff43388c746ec72b312f65ca92131fb488dc5b957c9814e77d1';

@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-18 22:55:41
+ * @Last Modified time: 2017-04-23 21:49:54
  */
 namespace App\Controller\Route;
 
@@ -127,7 +127,7 @@ class MyRoute
 			//获取文章详细内容
 			$route->map(["GET","OPTIONS"],"/{id:number}/getFrontArticle",[$ArticleController,"getFrontArticle"]);
 			$route->map(["POST","OPTIONS"],"/addArticle",[$ArticleController,"addArticle"]);
-			$route->map(["POST","OPTIONS"],"/{aid:number}/deleteArticle",[$ArticleController,"deleteArticle"]);
+			$route->map(["DELETE","OPTIONS"],"/{aid:number}/deleteArticle",[$ArticleController,"deleteArticle"]);
 			$route->map(["PUT","OPTIONS"],"/{aid:number}/toggleLike",[$ArticleController,"toggleLike"]);
 		})->setStrategy(new JsonStrategy)
 		->middleware(new ValidateMiddleware())
@@ -154,6 +154,16 @@ class MyRoute
 	{
 		$EditorController=new EditorController();
 		$this->route->map('GET',"/editor",[$EditorController,"editormd"]);
+	}
+
+	public function Tags(){
+		$ArticleController=new ArticleController();
+		$this->route->map(["GET","OPTIONS"],"/tags/getFrontTagList",[$ArticleController,"getFrontTagList"])
+		->setStrategy(new JsonStrategy)
+		->middleware(new ValidateMiddleware())
+		->middleware(new JsonRequestBodyDecodeMiddleware())
+		->middleware(new OptionsMethodMiddleware())
+		->middleware(new Cors($this->corsSetting));
 	}
 
 	public function dispatch(){

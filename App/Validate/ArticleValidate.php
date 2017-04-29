@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 16:34:44
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-17 21:32:19
+ * @Last Modified time: 2017-04-22 13:36:48
  */
 
 /**
@@ -16,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class ArticleValidate
 {
 	//页面检查
-	public function validate_getFrontArticleList(ServerRequestInterface $request){
+	public function validate_getFrontArticleList(ServerRequestInterface &$request){
 		$queryData=$request->getQueryParams();
 
 		if(!empty($queryData['currentPage'])){

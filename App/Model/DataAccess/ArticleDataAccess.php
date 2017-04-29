@@ -3,11 +3,12 @@
 namespace App\Model\DataAccess;
 
 use App\Model\BlogEntity;
+use App\Model\BlogLikeEntity;
 /**
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 22:09:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-19 00:31:46
+ * @Last Modified time: 2017-04-22 17:32:20
  */
 
 /**
@@ -70,11 +71,29 @@ class ArticleDataAccess
 	 */
 	public static function deleteArticle($aid)
 	{
-		return (new BlogEntity())->whereEq("id",$aid)->delete();
+		$BlogEntity=new BlogEntity();
+		$effect= $BlogEntity->whereEq("id",$aid)->delete();
+		return $effect;
 	}
 
-	public function like($aid)
+	/**
+	 * 对文章添加喜欢
+	 * @Author   Lerko
+	 * @DateTime 2017-04-22T14:41:50+0800
+	 * @param    [type]                   $aid [description]
+	 * @param    [type]                   $uid [description]
+	 * @return   [type]                        [description]
+	 */
+	public static function like($aid,$uid)
 	{
+		$BlogLike=new BlogLikeEntity(["uid"=>$uid,"article_id"=>$aid]);
+		$Already=$BlogLike->whereEq("uid",$uid)->whereAndEq("article_id",$aid)->find();
+		if(empty($Already)){
+			$BlogLike->insert();
+		}else{
+			return false;
+		}
+		//文章加1
 		$Blog=new BlogEntity();
 		$Blog->like=$Blog->whereEq("id",$aid)->find("like")+1;
 		$effect=$Blog->whereEq("id",$aid)->update();
