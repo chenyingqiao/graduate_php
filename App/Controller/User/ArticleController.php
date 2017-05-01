@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-29 16:48:35
+ * @Last Modified time: 2017-05-01 21:28:26
  */
 namespace App\Controller\User;
 
@@ -50,6 +50,7 @@ class ArticleController
 		$itemsPerPage=$queryParam["itemsPerPage"];
 		$sortName=$queryParam["sortName"];
 		$key_word=$queryParam['key_word'];
+		$tagId=$queryParam['tagId'];
 		if($sortName=="publish_time"){
 			$sortName="create_time";
 		}else{
@@ -57,11 +58,18 @@ class ArticleController
 		}
 		$Blog=new BlogEntity();
 		$entity=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage);
-		if($key_word) $entity->whereLike("title",'%'.$key_word)
+		if($key_word) {
+			// $userEntity=new UserEntity();
+			// $userEntity->whereEq('id','blog.id');
+			$entity->whereLike("title",'%'.$key_word)
 			->whereOrLike("title",$key_word.'%')
 			->whereOrLike("markdown",'%'.$key_word)
 			->whereOrLike("markdown",$key_word.'%');
+			// ->whereOrExists("user.username",$userEntity);
+		}
 		if($sortName=='my') $entity->whereEq('uid',$request->getAttribute("user_id"));
+		if(isset($tagId)&&!empty($tagId))
+			$entity->whereEq("tag_id",$tagId);
 		$data=$entity->order($sortName,"DESC")->select();
 		$xdebug_sql=$entity->sql();
 		$result=["data"=>[]];
@@ -69,7 +77,7 @@ class ArticleController
 			$result["data"][]=[
 				"_id"=>$value['id'],
 				"title"=>$value['title'],
-				"publish_time"=>Tool::date_format_iso8601($value['create_time']),
+				"publish_time"=>Tool::getInstanct()->date_format_iso8601($value['create_time']),
 				"like_count"=>$value['like'],
 				"comment_count"=>rand(1,50),
 				"visit_count"=>$value['visit_count'],
@@ -134,7 +142,7 @@ class ArticleController
 				"data"=>[
 					"_id"=>$data['id'],
 					"title"=>$data['title'],
-					"publish_time"=>Tool::date_format_iso8601($data['create_time']),
+					"publish_time"=>Tool::getInstanct()->date_format_iso8601($data['create_time']),
 					"like_count"=>$data['like'],
 					"visit_count"=>$Blog->visit_count,
 					"comment_count"=>rand(1,50),

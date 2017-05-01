@@ -8,7 +8,7 @@ use App\Model\BlogLikeEntity;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 22:09:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-22 17:32:20
+ * @Last Modified time: 2017-04-29 21:39:25
  */
 
 /**
@@ -34,10 +34,12 @@ class ArticleDataAccess
 			$Blog->create_time=time();
 			$Blog->uid=$data['user_id'];
 			$Blog->id=null;
+			$Blog->tag_id=$data['tag_id'];
 			$Blog->markdown=$data['markdown'];
 			$effect=$Blog->insert();
 		}else{
 			$Blog=new BlogEntity($data);
+			//这里会取回原来的数据 默认返回是-1
 			$Blog->id=$HasBlog['id'];
 			$effect=$Blog->whereEq("id",$HasBlog['id'])->update();
 		}

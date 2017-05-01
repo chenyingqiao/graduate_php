@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-29 14:29:01
+* @Last Modified time: 2017-05-01 10:07:57
 */
 show tables;
 show create table admin_users;
@@ -14,7 +14,7 @@ select * from user_operation_log;
 show create table blog;
 delete from blog where id=-1;
 delete from blog where title is null;
-select id,uid,title,visit_count,create_time from blog;
+select id,uid,title,visit_count,create_time,tag_id from blog;
 select `blog`.`id`,`blog`.`uid`,`blog`.`markdown`,`blog`.`title`,`blog`.`discreption`,`blog`.`content`,`blog`.`create_time`,`blog`.`update_time`,`blog`.`cat_id`,`blog`.`visit_count`,`blog`.`tag_id` from blog order by blog.visit_count asc limit 0,10;
 {
 truncate table blog;
@@ -184,4 +184,36 @@ select * from image_warehouse;
 		  UNIQUE KEY `id_UNIQUE` (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
 	}
+}
+
+
+{
+	--admin
+	show create table admin_menu;
+	select * from admin_menu;
+	
+	show create table admin_operation_log;
+	select * from admin_operation_log;
+	
+	show create table admin_permissions;
+	select * from admin_permissions;
+	
+	show create table admin_role_menu;
+	select * from admin_role_menu;
+	
+	show create table admin_role_permissions;
+	select * from admin_role_permissions;
+	
+	show create table admin_role_users;
+	select * from admin_role_users;
+	
+	show create table admin_roles;
+	select * from admin_roles;
+	
+	show create table admin_user_permissions;
+	select * from admin_user_permissions;
+	
+	show create table admin_users;
+	select * from admin_users;
+	
 }

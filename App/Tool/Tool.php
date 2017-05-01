@@ -5,7 +5,7 @@ namespace App\Tool;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 15:23:40
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-19 07:34:06
+ * @Last Modified time: 2017-05-01 15:21:10
  */
 
 /**
@@ -39,5 +39,10 @@ class Tool
 	public function date_format_iso8601($value){
 		$date = new \DateTime(date("Y-m-d h:i:s",$value));
 		return $date->format(\DateTime::ATOM); // Updated ISO8601
+	}
+
+	public function getUploadFilePrex($filename){
+		$arr=explode('.',$filename);
+		return $arr[count($arr)-1];
 	}
 }
