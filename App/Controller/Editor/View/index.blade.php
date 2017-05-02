@@ -16,6 +16,13 @@
                     @endforeach
                 </select>
             </div>
+            <div>
+                <form id="uploadForm">
+                    <input type="file" name="editormd-image-file">
+                </form>
+                    <button onclick="uploadFile();">上传</button>
+                    <span id="url"></span>
+            </div>
             <div id="test-editormd"></div>
         </div>
         <script src="/App/Controller/Editor/View/examples/js/jquery.min.js"></script>
@@ -23,6 +30,29 @@
         <script src="/App/Controller/Editor/View/jquery.cookie.js"></script>
         <script type="text/javascript">
             var testEditor;
+
+            function uploadFile(){
+                 var formData = new FormData($( "#uploadForm" )[0]);
+                 console.log(formData);
+                 $.ajax({  
+                      url: '/fileupload',
+                      type: 'POST',
+                      data: formData,  
+                      async: false,  
+                      cache: false,  
+                      contentType: false,  
+                      processData: false,  
+                      success: function (returndata) {  
+                          console.log(returndata);
+                          $("url")
+                      },  
+                      error: function (returndata) {  
+                          console.log(returndata);  
+                      }  
+                 });
+                 return true;
+            }
+
             $(function() {
 
                 $.get("editor{{isset($aid)&&$aid!=-1?'?aid='.$aid:''}}",function(md){

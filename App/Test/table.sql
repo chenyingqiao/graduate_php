@@ -1,8 +1,8 @@
 /*
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
-* @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-05-01 10:07:57
+* @Last Modified by:   lerko
+* @Last Modified time: 2017-05-02 17:47:51
 */
 show tables;
 show create table admin_users;
@@ -55,6 +55,8 @@ select * from image_blog_ref;
 	  `id` INT(11) NOT NULL AUTO_INCREMENT,
 	  `blog_id` INT(11) NULL,
 	  `image_id` INT(11) NULL,
+	  `create_time` VARCHAR(45) NULL,
+	  `update_time` VARCHAR(45) NULL,
 	  PRIMARY KEY (`id`))
 	ENGINE = InnoDB
 	DEFAULT CHARACTER SET = utf8
@@ -125,6 +127,8 @@ select * from image_warehouse;
 	  `id` INT NOT NULL AUTO_INCREMENT,
 	  `image_path` VARCHAR(255) NULL,
 	  `image_cut_path` VARCHAR(45) NULL,
+	  `create_time` VARCHAR(45) NULL,
+	  `update_time` VARCHAR(45) NULL,
 	  PRIMARY KEY (`id`))
 	ENGINE = InnoDB
 	DEFAULT CHARACTER SET = utf8

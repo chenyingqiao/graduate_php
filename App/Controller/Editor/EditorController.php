@@ -5,6 +5,8 @@ namespace App\Controller\Editor;
 use App\Controller\CommonController;
 use App\Model\BlogEntity;
 use App\Model\CatEntity;
+use App\Model\ImageBlogRef;
+use App\Model\ImageWarehouse;
 use App\Tool\Tool;
 use Jenssegers\Blade\Blade;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +19,7 @@ use Zend\Diactoros\UploadedFile;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-17 20:08:28
  * @Last Modified by:   lerko
- * @Last Modified time: 2017-05-02 17:30:09
+ * @Last Modified time: 2017-05-02 18:04:55
  */
 
 /**
@@ -56,6 +58,7 @@ class EditorController extends CommonController
 
 	public function fileupload(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
+		$blog_id=$request->getParsedBody()['blog_id'];
 		try {
 			$upload=$request->getUploadedFiles()["editormd-image-file"];
 			$prex=Tool::getInstanct()->getUploadFilePrex($upload->getClientFilename());
@@ -65,6 +68,7 @@ class EditorController extends CommonController
 			$upload->moveTo($filepath);
 			//图片略缩图
 			Tool::getInstanct()->img2thumb($filepath,__ROOT__.$resultPath."small".".".$prex);
+			$this->saveImageInfo($blog_id,$addPrexPath,$resultPath."small".".".$prex);//保存图片信息到数据库
 			return new JsonResponse([
 					"success" => 1,
 				    "message" => "上传成功",
@@ -77,5 +81,31 @@ class EditorController extends CommonController
 				]);
 		}
 
+	}
+
+	/**
+	 * 保存图片信息
+	 * @Author   Lerko
+	 * @DateTime 2017-05-02T17:57:34+0800
+	 * @param    [type]                   $blog_id [description]
+	 * @param    [type]                   $url     [description]
+	 * @param    [type]                   $cut_url [description]
+	 * @return   [type]                            [description]
+	 */
+	private function saveImageInfo($blog_id,$url,$cut_url){
+		$imageWarehouse=new ImageWarehouse();
+		$imageWarehouse->image_path=$url;
+		$imageWarehouse->iamge_cut_path=$cut_url;
+		$imageWarehouse->create_time=time();
+		$imageWarehouse->update_time=time();
+		$imageWarehouse->insert();
+		$image_id=$imageWarehouse->getLastId();
+
+		$imageBlogRef=new ImageBlogRef();
+		$imageBlogRef->blog_id=$blog_id;
+		$imageBlogRef->image_id=$image_id;
+		$imageBlogRef->create_time=time();
+		$imageBlogRef->update_time=time();
+		$imageBlogRef->insert();
 	}
 }
