@@ -16,8 +16,8 @@ use Zend\Diactoros\UploadedFile;
 /**
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-17 20:08:28
- * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-05-01 20:29:31
+ * @Last Modified by:   lerko
+ * @Last Modified time: 2017-05-02 17:17:39
  */
 
 /**
@@ -59,13 +59,18 @@ class EditorController extends CommonController
 		try {
 			$upload=$request->getUploadedFiles()["editormd-image-file"];
 			$prex=Tool::getInstanct()->getUploadFilePrex($upload->getClientFilename());
-			$resultPath=DIRECTORY_SEPARATOR."UploadFile".DIRECTORY_SEPARATOR.time()."blog".rand(1000,9999).".".$prex;
-			$filepath=__ROOT__.$resultPath;
+			$resultPath=DIRECTORY_SEPARATOR."UploadFile".DIRECTORY_SEPARATOR.time()."blog".rand(1000,9999);
+			$addPrexPath=$resultPath.".".$prex;
+			$filepath=__ROOT__.$addPrexPath;
+
+			//图片略缩图
+			Tool::getInstanct()->img2thumb($filepath,$resultPath."small".".".$prex);
+
 			$upload->moveTo($filepath);
 			return new JsonResponse([
 					"success" => 1,
 				    "message" => "上传成功",
-				    "url"     => $resultPath
+				    "url"     => $addPrexPath
 				]);
 		} catch (Exception $e) {
 			return new JsonResponse([
