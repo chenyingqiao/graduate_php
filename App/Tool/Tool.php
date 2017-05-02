@@ -5,7 +5,7 @@ namespace App\Tool;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 15:23:40
  * @Last Modified by:   lerko
- * @Last Modified time: 2017-05-02 17:04:33
+ * @Last Modified time: 2017-05-02 17:27:22
  */
 
 /**
@@ -62,7 +62,7 @@ class Tool {
 		if (!is_file($src_img)) {
 			return false;
 		}
-		$ot = fileext($dst_img);
+		$ot = pathinfo($dst_img, PATHINFO_EXTENSION);
 		$otfunc = 'image' . ($ot == 'jpg' ? 'jpeg' : $ot);
 		$srcinfo = getimagesize($src_img);
 		$src_w = $srcinfo[0];
