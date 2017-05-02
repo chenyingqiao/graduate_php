@@ -2,9 +2,10 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-04-19 00:20:48
+* @Last Modified time: 2017-05-01 10:07:57
 */
 show tables;
+show create table admin_users;
 
 
 show create table user_operation_log;
@@ -13,7 +14,7 @@ select * from user_operation_log;
 show create table blog;
 delete from blog where id=-1;
 delete from blog where title is null;
-select id,uid,title,visit_count,create_time from blog;
+select id,uid,title,visit_count,create_time,tag_id from blog;
 select `blog`.`id`,`blog`.`uid`,`blog`.`markdown`,`blog`.`title`,`blog`.`discreption`,`blog`.`content`,`blog`.`create_time`,`blog`.`update_time`,`blog`.`cat_id`,`blog`.`visit_count`,`blog`.`tag_id` from blog order by blog.visit_count asc limit 0,10;
 {
 truncate table blog;
@@ -44,6 +45,7 @@ delete from blog where `blog`.`title` = 'sdfsdf';
 
 show create table cat;
 select * from cat;
+insert into cat values (1,"test",1),(2,"test",1),(3,"test",1);
 
 --关联图片和博客的表
 show create table image_blog_ref;
@@ -60,7 +62,7 @@ select * from image_blog_ref;
 }
 
 show create table blog_like;
-select * from table blog_like;
+select * from blog_like;
 {
 	drop table blog_like;
 	CREATE TABLE IF NOT EXISTS `blog`.`blog_like` (
@@ -88,6 +90,8 @@ select * from user;
 	  `role` INT(3) DEFAULT 1,
 	  `head_image` TEXT NULL,
 	  `sex` TINYINT(1) NULL,
+	  `phone_number` VARCHAR(45) NULL,
+	  `email` VARCHAR(45) NULL,
 	  PRIMARY KEY (`id`),
 	  UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 	ENGINE = InnoDB
@@ -97,7 +101,6 @@ select * from user;
 
 show create table comment;
 select * from comment;
-delete from comment where uid is null;
 {
 	drop table comment;
 	CREATE TABLE IF NOT EXISTS `blog`.`comment` (
@@ -114,6 +117,7 @@ delete from comment where uid is null;
 	DEFAULT CHARACTER SET = utf8
 }
 
+-- 图片存储中心
 show create table image_warehouse;
 select * from image_warehouse;
 {
@@ -148,6 +152,7 @@ select * from image_warehouse;
 
 	show create table access_token;
 	select * from access_token;
+	truncate table access_token;
 	{
 		drop table access_token;
 		CREATE TABLE `access_token` (
@@ -181,5 +186,34 @@ select * from image_warehouse;
 	}
 }
 
-select * from access_token;
-select * from access_token where access_token_id='2d535032f5b5576dda366ba8340deff43388c746ec72b312f65ca92131fb488dc5b957c9814e77d1';
+
+{
+	--admin
+	show create table admin_menu;
+	select * from admin_menu;
+	
+	show create table admin_operation_log;
+	select * from admin_operation_log;
+	
+	show create table admin_permissions;
+	select * from admin_permissions;
+	
+	show create table admin_role_menu;
+	select * from admin_role_menu;
+	
+	show create table admin_role_permissions;
+	select * from admin_role_permissions;
+	
+	show create table admin_role_users;
+	select * from admin_role_users;
+	
+	show create table admin_roles;
+	select * from admin_roles;
+	
+	show create table admin_user_permissions;
+	select * from admin_user_permissions;
+	
+	show create table admin_users;
+	select * from admin_users;
+	
+}

@@ -9,7 +9,7 @@ use App\Tool\Tool;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 11:47:05
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-16 15:47:50
+ * @Last Modified time: 2017-04-19 08:43:07
  */
 
 /**
@@ -29,7 +29,7 @@ class CommentDataAccess
 		$CommentEntity=new CommentEntity();
 		$BlogCommon=$CommentEntity->whereEq("blog_id",$aid)->select();
 		$data=[];
-		$result=[];
+		$result=["data"=>[]];
 		foreach ($BlogCommon as $key => $value) {
 			$User=UserDataAccess::getUserInfoById($value['uid']);
 			$data['__v']=0;

@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:33:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-13 22:16:27
+ * @Last Modified time: 2017-04-29 15:54:04
  */
 namespace App\Controller\Oauth;
 
@@ -34,12 +34,11 @@ class OauthController
         } catch (OAuthServerException $exception) {
 
             // All instances of OAuthServerException can be converted to a PSR-7 response
-            return $exception->generateHttpResponse($response);
+            // return $exception->generateHttpResponse($response);
+            return new JsonResponse(["error_msg"=>"用户或者密码错误"],422);
         } catch (\Exception $exception) {
             // Catch unexpected exceptions
-            $body = $response->getBody();
-            $body->write($exception->getMessage());
-            return $response;
+            return new JsonResponse(["error_msg"=>$exception->getMessage()],422);
         }
 	}
 
@@ -83,14 +82,14 @@ class OauthController
         );
         $server->enableGrantType(
             $grant,
-            new \DateInterval('PT1H') // access tokens will expire after 1 hour
+            new \DateInterval('PT1M') // access tokens will expire after 1 hour
         );
 
         $refreshTokenGrant=new RefreshTokenGrant($refreshTokenRepository);
-         $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
+         // $grant->setRefreshTokenTTL(new \DateInterval('P1M'));
         $server->enableGrantType(
             $refreshTokenGrant,
-            new \DateInterval('PT1H') 
+            new \DateInterval('PT1M')
             );
 
         $server->enableGrantType(

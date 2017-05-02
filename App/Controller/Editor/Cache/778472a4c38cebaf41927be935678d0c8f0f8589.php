@@ -9,6 +9,13 @@
     </head>
     <body>
         <div id="layout">
+            <div>
+                <select name="tag" id="tag" style="width: 300px;background-color: #ccc;">
+                    <?php $__currentLoopData = $tags; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value='<?php echo e($item["_id"]); ?>'><?php echo e($item['name']); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </select>
+            </div>
             <div id="test-editormd"></div>
         </div>
         <script src="/App/Controller/Editor/View/examples/js/jquery.min.js"></script>
@@ -20,12 +27,12 @@
 
                 $.get("editor<?php echo e(isset($aid)&&$aid!=-1?'?aid='.$aid:''); ?>",function(md){
                     testEditor = editormd("test-editormd", {
-                        width: "90%",
-                        height: 740,
+                        width: "100%",
+                        height: 700,
                         path : '/App/Controller/Editor/View/lib/',
-                        theme : "dark",
-                        previewTheme : "dark",
-                        editorTheme : "pastel-on-dark",
+                        // theme : "dark",
+                        // previewTheme : "dark",
+                        // editorTheme : "pastel-on-dark",
                         markdown : md,
                         codeFold : true,
                         //syncScrolling : false,
@@ -48,10 +55,10 @@
                         //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
                         imageUpload : true,
                         imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                        imageUploadURL : "./php/upload.php",
+                        imageUploadURL : "/fileupload",
                         onload : function() {
                             console.log('onload', this);
-                            this.fullscreen();
+                            // this.fullscreen();
                             alert("ctrl+s 保存 \nctrl+alt+q 退出 \n更换标题就可以新建文章！")
                         }
                     });
@@ -63,6 +70,8 @@
                     var token=$.cookie('token');
                     if(ev.ctrlKey  &&  window.event.keyCode==83 ){ 
                         document.mk_title=testEditor.getMarkdown().split(/[\n,]/g)[0].slice(2);
+                        tag=document.getElementById("tag");
+                        selectTag=tag.options[tag.selectedIndex].value;
                         console.log(document.mk_title);
                         $.ajax({
                             type:"post",
@@ -71,7 +80,8 @@
                                 "id":<?php echo e($aid); ?>,
                                 "title":document.mk_title,
                                 "content":testEditor.getHTML(),
-                                "markdown":testEditor.getMarkdown()
+                                "markdown":testEditor.getMarkdown(),
+                                "tag_id":selectTag
                             },
                             headers : {'authorization':token},
                             success:function(data){

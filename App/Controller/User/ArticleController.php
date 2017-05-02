@@ -3,11 +3,12 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-18 23:42:36
+ * @Last Modified time: 2017-05-01 21:28:26
  */
 namespace App\Controller\User;
 
 use App\Model\BlogEntity;
+use App\Model\CatEntity;
 use App\Model\DataAccess\ArticleDataAccess;
 use App\Model\UserEntity;
 use App\Tool\Tool;
@@ -45,25 +46,43 @@ class ArticleController
 	 */
 	public function getFrontArticleList(ServerRequestInterface $request,ResponseInterface $response,array $args){
 		$queryParam=$request->getQueryParams();
-		$currentPage=$request->getAttribute("currentPage");
-		$itemsPerPage=$request->getAttribute("itemsPerPage");
-		$sortName=$request->getAttribute("sortName");
+		$currentPage=$queryParam["currentPage"];
+		$itemsPerPage=$queryParam["itemsPerPage"];
+		$sortName=$queryParam["sortName"];
+		$key_word=$queryParam['key_word'];
+		$tagId=$queryParam['tagId'];
 		if($sortName=="publish_time"){
 			$sortName="create_time";
 		}else{
 			$sortName="visit_count";
 		}
 		$Blog=new BlogEntity();
-		$data=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage)->order($sortName)->select();
-		$result=[];
+		$entity=Tool::getInstanct()->Page($Blog,$currentPage,$itemsPerPage);
+		if($key_word) {
+			// $userEntity=new UserEntity();
+			// $userEntity->whereEq('id','blog.id');
+			$entity->whereLike("title",'%'.$key_word)
+			->whereOrLike("title",$key_word.'%')
+			->whereOrLike("markdown",'%'.$key_word)
+			->whereOrLike("markdown",$key_word.'%');
+			// ->whereOrExists("user.username",$userEntity);
+		}
+		if($sortName=='my') $entity->whereEq('uid',$request->getAttribute("user_id"));
+		if(isset($tagId)&&!empty($tagId))
+			$entity->whereEq("tag_id",$tagId);
+		$data=$entity->order($sortName,"DESC")->select();
+		$xdebug_sql=$entity->sql();
+		$result=["data"=>[]];
 		foreach ($data as $key => $value) {
 			$result["data"][]=[
 				"_id"=>$value['id'],
 				"title"=>$value['title'],
-				"publish_time"=>Tool::date_format_iso8601($value['create_time']),
+				"publish_time"=>Tool::getInstanct()->date_format_iso8601($value['create_time']),
 				"like_count"=>$value['like'],
 				"comment_count"=>rand(1,50),
-				"images"=>[]
+				"visit_count"=>$value['visit_count'],
+				"images"=>[],
+				"uid"=>$value['uid']
 			];
 		}
 		return new JsonResponse($result);
@@ -118,13 +137,14 @@ class ArticleController
 		$Blog=new BlogEntity();
 		$data=$Blog->whereEq("id",$args['id'])->find();
 		$Blog->visit_count=$data['visit_count']+1;
-		$Blog->update();
+		$Blog->whereEq("id",$args['id'])->update();
 		return new JsonResponse([
 				"data"=>[
 					"_id"=>$data['id'],
 					"title"=>$data['title'],
-					"publish_time"=>Tool::date_format_iso8601($data['create_time']),
+					"publish_time"=>Tool::getInstanct()->date_format_iso8601($data['create_time']),
 					"like_count"=>$data['like'],
+					"visit_count"=>$Blog->visit_count,
 					"comment_count"=>rand(1,50),
 					"content"=>$data['content']
 				]
@@ -172,9 +192,9 @@ class ArticleController
 	public function deleteArticle(ServerRequestInterface $request,ResponseInterface $response,array $args){
 		$effect=ArticleDataAccess::deleteArticle($args['aid']);
 		if($effect){
-			return new JsonResponse(['msg'=>"删除成功","status"=>false]);
+			return new JsonResponse(['msg'=>"删除成功","status"=>true]);
 		}
-		return new JsonResponse(['msg'=>"删除失败","status"=>true],422);
+		return new JsonResponse(['msg'=>"删除失败","status"=>false],422);
 	}
 
 	/**
@@ -188,11 +208,30 @@ class ArticleController
 	 */
 	public function toggleLike(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
-		$effect=ArticleDataAccess::like($args['aid']);
-		if($effect){
-			return new JsonResponse(['count'=>$effect,"success"=>false,"isLike"=>true]);
+		$data['user_id']=$request->getAttribute("user_id");
+		$effect=ArticleDataAccess::like($args['aid'],$data['user_id']);
+		if($effect==true){
+			return new JsonResponse(['count'=>$effect,"success"=>true,"isLike"=>true]);
 		}
 		return new JsonResponse(['count'=>$effect,"success"=>false,"isLike"=>false],422);
+	}
+
+	/**
+	 * 获取标签
+	 * @Author   Lerko
+	 * @DateTime 2017-04-23T21:35:24+0800
+	 * @param    ServerRequestInterface   $request  [description]
+	 * @param    ResponseInterface        $response [description]
+	 * @param    array                    $args     [description]
+	 * @return   [type]                             [description]
+	 */
+	public function getFrontTagList(ServerRequestInterface $request,ResponseInterface $response,array $args)
+	{
+		$cat=new CatEntity();
+		$data=$cat->select();
+		return new JsonResponse([
+				"data"=>$data
+			]);
 	}
 
 }

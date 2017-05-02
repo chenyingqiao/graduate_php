@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-08 13:13:48
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-18 22:55:41
+ * @Last Modified time: 2017-04-30 10:09:53
  */
 namespace App\Controller\Route;
 
@@ -27,6 +27,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\Cors;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;
@@ -70,19 +71,9 @@ class MyRoute
 	 */
 	public function Common(){
 		$this->route->map('GET', '/', function (ServerRequestInterface $request, ResponseInterface $response) {
-			// $response->withStatus(204,"No Content");
-		 //    $response->getBody()->write('<h1>Hello, World121212!</h1>');
-		 	
-		 	$response = new JsonResponse(["ying"=>11], 404, [ 'Content-Type' => ['application/hal+json']]);
+		 	$response = new HtmlResponse("<h1 style='margin:0 auto'>欢迎来到BlogApi</h1>");
 		    return $response;
 		});
-
-		$this->route->map('GET', '/access_test', function (ServerRequestInterface $request, ResponseInterface $response) {
-		    $response->getBody()->write("Hello, World! /user/");
-		    return $response;
-		})->setStrategy(new ApplicationStrategy())
-		->middleware(new ResourceServerMiddleware($this->container->get("resourceServer")))
-		->middleware(new Cors($this->corsSetting));
 	}
 
 	/**
@@ -127,7 +118,7 @@ class MyRoute
 			//获取文章详细内容
 			$route->map(["GET","OPTIONS"],"/{id:number}/getFrontArticle",[$ArticleController,"getFrontArticle"]);
 			$route->map(["POST","OPTIONS"],"/addArticle",[$ArticleController,"addArticle"]);
-			$route->map(["POST","OPTIONS"],"/{aid:number}/deleteArticle",[$ArticleController,"deleteArticle"]);
+			$route->map(["DELETE","OPTIONS"],"/{aid:number}/deleteArticle",[$ArticleController,"deleteArticle"]);
 			$route->map(["PUT","OPTIONS"],"/{aid:number}/toggleLike",[$ArticleController,"toggleLike"]);
 		})->setStrategy(new JsonStrategy)
 		->middleware(new ValidateMiddleware())
@@ -154,6 +145,18 @@ class MyRoute
 	{
 		$EditorController=new EditorController();
 		$this->route->map('GET',"/editor",[$EditorController,"editormd"]);
+		//文件上传
+		$this->route->map(['POST'],'/fileupload',[$EditorController,"fileupload"])->setStrategy(new JsonStrategy);
+	}
+
+	public function Tags(){
+		$ArticleController=new ArticleController();
+		$this->route->map(["GET","OPTIONS"],"/tags/getFrontTagList",[$ArticleController,"getFrontTagList"])
+		->setStrategy(new JsonStrategy)
+		->middleware(new ValidateMiddleware())
+		->middleware(new JsonRequestBodyDecodeMiddleware())
+		->middleware(new OptionsMethodMiddleware())
+		->middleware(new Cors($this->corsSetting));
 	}
 
 	public function dispatch(){

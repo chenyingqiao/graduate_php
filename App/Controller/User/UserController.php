@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-12 21:08:20
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-17 23:33:50
+ * @Last Modified time: 2017-04-23 11:06:33
  */
 namespace App\Controller\User;
 
@@ -44,6 +44,7 @@ class UserController
 		}
 		return new JsonResponse([
 				"nickname"=>$User["username"],
+				"uid"=>$User['id'],
 				"role"=>"user",
 				"avatar"=>"http://api-lerko.ngrok.cc/UploadFile/avatar.jpg",
 				"likes"=>[],

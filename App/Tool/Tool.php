@@ -5,7 +5,7 @@ namespace App\Tool;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 15:23:40
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-18 23:09:14
+ * @Last Modified time: 2017-05-01 15:21:10
  */
 
 /**
@@ -21,20 +21,28 @@ class Tool
 		return self::$Tool;
 	}
 
-	public function Page($Entity,$pageCurrent=1,$pageSize=10){
+	public function Page($Entity,$pageCurrent=1,$pageSize=6){
 		$count=$Entity->count();
 		$xdebug_sql=$Entity->sql();
-		$pageTotle=ceil($count/10);
-		$limitStart=$pageCurrent*10;
+		$pageTotle=ceil($count/$pageSize);
+		$limitStart=($pageCurrent-1)*$pageSize;
 		if($limitStart>$count){
 			$limitStart=$count;
 		}
-		$limitEnd=$limitStart+10;
+		if($pageCurrent==1){
+			$limitStart=0;
+		}
+		$limitEnd=$limitStart+$pageSize;
 		return $Entity->limit($limitStart,$limitEnd);
 	}
 
 	public function date_format_iso8601($value){
 		$date = new \DateTime(date("Y-m-d h:i:s",$value));
 		return $date->format(\DateTime::ATOM); // Updated ISO8601
+	}
+
+	public function getUploadFilePrex($filename){
+		$arr=explode('.',$filename);
+		return $arr[count($arr)-1];
 	}
 }
