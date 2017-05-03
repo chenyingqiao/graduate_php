@@ -4,11 +4,13 @@ namespace App\Model\DataAccess;
 
 use App\Model\BlogEntity;
 use App\Model\BlogLikeEntity;
+use App\Model\ImageBlogRef;
+use App\Model\ImageWarehouse;
 /**
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 22:09:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-29 21:39:25
+ * @Last Modified time: 2017-05-02 22:07:12
  */
 
 /**
@@ -103,5 +105,22 @@ class ArticleDataAccess
 			return $Blog->like;
 		}
 		return false;
+	}
+
+	/**
+	 * 获取图像列表
+	 * @Author   Lerko
+	 * @DateTime 2017-05-02T21:36:17+0800
+	 * @param    [type]                   $aid [description]
+	 * @return   [type]                        [description]
+	 */
+	public static function getImageList($aid){
+		$Blog=new BlogEntity(false);
+		$ImageBlogRef=new ImageBlogRef(false);
+		$ImageWarehouse=new ImageWarehouse(["image_cut_path"]);
+		$ImageBlogRef->join($ImageWarehouse,"$.image_id=#.id");
+		$Blog->join($ImageBlogRef,"$.id=#.blog_id");
+		$data=$Blog->whereEq("id",$aid)->select();
+		return $data;
 	}
 }

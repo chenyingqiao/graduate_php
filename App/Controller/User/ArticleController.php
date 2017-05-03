@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-05-01 21:28:26
+ * @Last Modified time: 2017-05-02 21:40:50
  */
 namespace App\Controller\User;
 
@@ -81,7 +81,7 @@ class ArticleController
 				"like_count"=>$value['like'],
 				"comment_count"=>rand(1,50),
 				"visit_count"=>$value['visit_count'],
-				"images"=>[],
+				"images"=>ArticleDataAccess::getImageList($value['id']),
 				"uid"=>$value['uid']
 			];
 		}

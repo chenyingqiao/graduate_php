@@ -10,6 +10,10 @@
     <body>
         <div id="layout">
             <div>
+                <h1>ctrl+s 保存 ctrl+alt+q 退出 更换标题就可以新建文章！</h1>
+                <h2 id="tip"></h2>
+            </div>
+            <div>
                 <select name="tag" id="tag" style="width: 300px;background-color: #ccc;">
                     @foreach ($tags as $item)
                         <option value='{{$item["_id"]}}'>{{$item['name']}}</option>
@@ -32,7 +36,9 @@
             var testEditor;
 
             function uploadFile(){
+                 saveArticle();
                  var formData = new FormData($( "#uploadForm" )[0]);
+                 formData.append("blog_id",document.save_id);
                  console.log(formData);
                  $.ajax({  
                       url: '/fileupload',
@@ -44,10 +50,11 @@
                       processData: false,  
                       success: function (returndata) {  
                           console.log(returndata);
-                          $("url")
+                          $("#url").html("请拷贝："+returndata.url);
                       },  
                       error: function (returndata) {  
-                          console.log(returndata);  
+                          console.log(returndata); 
+                          console.log("asdfasdf"); 
                       }  
                  });
                  return true;
@@ -89,7 +96,6 @@
                         onload : function() {
                             console.log('onload', this);
                             // this.fullscreen();
-                            alert("ctrl+s 保存 \nctrl+alt+q 退出 \n更换标题就可以新建文章！")
                         }
                     });
                 });
@@ -97,33 +103,9 @@
 
                 document.onkeydown = function(e){
                     var ev = document.all ? window.event : e;
-                    var token=$.cookie('token');
+ 
                     if(ev.ctrlKey  &&  window.event.keyCode==83 ){ 
-                        document.mk_title=testEditor.getMarkdown().split(/[\n,]/g)[0].slice(2);
-                        tag=document.getElementById("tag");
-                        selectTag=tag.options[tag.selectedIndex].value;
-                        console.log(document.mk_title);
-                        $.ajax({
-                            type:"post",
-                            url:"http://api-lerko.ngrok.cc/article/addArticle",
-                            data:{
-                                "id":{{$aid}},
-                                "title":document.mk_title,
-                                "content":testEditor.getHTML(),
-                                "markdown":testEditor.getMarkdown(),
-                                "tag_id":selectTag
-                            },
-                            headers : {'authorization':token},
-                            success:function(data){
-                                if(!data.status){
-                                    alert(data.msg);
-                                }
-                                document.save_id=data.id;
-                            },
-                            error:function(data){
-                                alert("保存失败");
-                            }
-                        });
+                        saveArticle();
                         return false;
                     }
                     else if(ev.ctrlKey && ev.altKey  &&  window.event.keyCode==81 ){
@@ -131,6 +113,36 @@
                     }
                 }
             });
+
+            function saveArticle(){
+                var token=$.cookie('token');
+                document.mk_title=testEditor.getMarkdown().split(/[\n,]/g)[0].slice(2);
+                tag=document.getElementById("tag");
+                selectTag=tag.options[tag.selectedIndex].value;
+                console.log(document.mk_title);
+                $.ajax({
+                    type:"post",
+                    url:"http://api-lerko.ngrok.cc/article/addArticle",
+                    data:{
+                        "id":{{$aid}},
+                        "title":document.mk_title,
+                        "content":testEditor.getHTML(),
+                        "markdown":testEditor.getMarkdown(),
+                        "tag_id":selectTag
+                    },
+                    headers : {'authorization':token},
+                    success:function(data){
+                        if(!data.status){
+                            $("#tip").html(data.msg);
+                        }
+                        $("#tip").html(data.msg);
+                        document.save_id=data.id;
+                    },
+                    error:function(data){
+                        $("#tip").html("请求失败");
+                    }
+                });
+            }
         </script>
     </body>
 </html>

@@ -1,8 +1,8 @@
 /*
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
-* @Last Modified by:   lerko
-* @Last Modified time: 2017-05-02 17:47:51
+* @Last Modified by:   ‘chenyingqiao’
+* @Last Modified time: 2017-05-02 22:10:25
 */
 show tables;
 show create table admin_users;
@@ -51,6 +51,8 @@ insert into cat values (1,"test",1),(2,"test",1),(3,"test",1);
 show create table image_blog_ref;
 select * from image_blog_ref;
 {
+truncate table image_blog_ref;
+	drop table image_blog_ref;
 	CREATE TABLE IF NOT EXISTS `blog`.`image_blog_ref` (
 	  `id` INT(11) NOT NULL AUTO_INCREMENT,
 	  `blog_id` INT(11) NULL,
@@ -63,6 +65,23 @@ select * from image_blog_ref;
 	COLLATE = utf8_bin
 }
 
+-- 图片存储中心
+show create table image_warehouse;
+select * from image_warehouse;
+{
+truncate table image_warehouse;
+		drop table image_warehouse;
+	CREATE TABLE IF NOT EXISTS `blog`.`image_warehouse` (
+	  `id` INT NOT NULL AUTO_INCREMENT,
+	  `image_path` VARCHAR(255) NULL,
+	  `image_cut_path` VARCHAR(255) NULL,
+	  `create_time` VARCHAR(45) NULL,
+	  `update_time` VARCHAR(45) NULL,
+	  PRIMARY KEY (`id`))
+	ENGINE = InnoDB
+	DEFAULT CHARACTER SET = utf8
+	COLLATE = utf8_bin
+}
 show create table blog_like;
 select * from blog_like;
 {
@@ -119,21 +138,6 @@ select * from comment;
 	DEFAULT CHARACTER SET = utf8
 }
 
--- 图片存储中心
-show create table image_warehouse;
-select * from image_warehouse;
-{
-	CREATE TABLE IF NOT EXISTS `blog`.`image_warehouse` (
-	  `id` INT NOT NULL AUTO_INCREMENT,
-	  `image_path` VARCHAR(255) NULL,
-	  `image_cut_path` VARCHAR(45) NULL,
-	  `create_time` VARCHAR(45) NULL,
-	  `update_time` VARCHAR(45) NULL,
-	  PRIMARY KEY (`id`))
-	ENGINE = InnoDB
-	DEFAULT CHARACTER SET = utf8
-	COLLATE = utf8_bin
-}
 
 {
 	show create table client;
