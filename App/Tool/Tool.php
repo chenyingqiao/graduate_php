@@ -4,8 +4,8 @@ namespace App\Tool;
 /**
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 15:23:40
- * @Last Modified by:   lerko
- * @Last Modified time: 2017-05-02 17:27:22
+ * @Last Modified by:   ‘chenyingqiao’
+ * @Last Modified time: 2017-05-03 23:03:12
  */
 
 /**
@@ -43,8 +43,9 @@ class Tool {
 	}
 
 	public function getUploadFilePrex($filename) {
-		$arr = explode('.', $filename);
-		return $arr[count($arr) - 1];
+		// $arr = explode('.', $filename);
+		// return $arr[count($arr) - 1];
+		return pathinfo($filename, PATHINFO_EXTENSION);
 	}
 
 	/**

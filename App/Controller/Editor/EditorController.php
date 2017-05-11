@@ -19,7 +19,7 @@ use Zend\Diactoros\UploadedFile;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-17 20:08:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-05-02 22:22:11
+ * @Last Modified time: 2017-05-03 18:24:58
  */
 
 /**
@@ -107,9 +107,6 @@ class EditorController extends CommonController
 		$imageBlogRef->image_id=$image_id;
 		$imageBlogRef->create_time=time();
 		$imageBlogRef->update_time=time();
-		var_dump($imageBlogRef->error());
-		var_dump($imageBlogRef->sql());
-		var_dump($imageBlogRef);
 		$imageBlogRef->insert();
 	}
 }

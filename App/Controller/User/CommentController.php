@@ -14,7 +14,7 @@ use Zend\Diactoros\Response\JsonResponse;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 21:25:40
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-17 22:57:13
+ * @Last Modified time: 2017-05-04 13:17:39
  */
 
 /**
@@ -30,6 +30,7 @@ class CommentController
 	 * @DateTime 2017-04-15T21:26:15+0800
 	 * @param    string                   $value [description]
 	 */
+	//添加评论
 	public function addNewComment(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
 		$param=$request->getParsedBody();
@@ -43,6 +44,7 @@ class CommentController
 		$CommentEntity->uid=$User["id"];
 		$effect=$CommentEntity->insert();
 		if($effect){
+			//返回评论数据
 			return new JsonResponse([
 					"success"=>true,
 					"data"=>[
@@ -81,7 +83,7 @@ class CommentController
 		$data=CommentDataAccess::getCommentByArticle($args['aid']);
 		return new JsonResponse($data);
 	}
-
+	//添加子评论
 	public function addNewReply(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
 		$param=$request->getParsedBody();

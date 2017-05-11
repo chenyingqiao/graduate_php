@@ -10,7 +10,7 @@ use App\Model\ImageWarehouse;
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-16 22:09:21
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-05-02 22:07:12
+ * @Last Modified time: 2017-05-03 18:31:44
  */
 
 /**
@@ -121,6 +121,10 @@ class ArticleDataAccess
 		$ImageBlogRef->join($ImageWarehouse,"$.image_id=#.id");
 		$Blog->join($ImageBlogRef,"$.id=#.blog_id");
 		$data=$Blog->whereEq("id",$aid)->select();
-		return $data;
+		$image_list=[];
+		foreach ($data as $key => $value) {
+			$image_list[]['url']=$value['image_cut_path'];
+		}
+		return $image_list;
 	}
 }

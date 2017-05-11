@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-05-02 21:40:50
+ * @Last Modified time: 2017-05-09 08:30:51
  */
 namespace App\Controller\User;
 
@@ -53,7 +53,10 @@ class ArticleController
 		$tagId=$queryParam['tagId'];
 		if($sortName=="publish_time"){
 			$sortName="create_time";
-		}else{
+		}elseif($sortName=='my'){
+			$sortName='update_time';
+		}
+		else{
 			$sortName="visit_count";
 		}
 		$Blog=new BlogEntity();
@@ -61,13 +64,14 @@ class ArticleController
 		if($key_word) {
 			// $userEntity=new UserEntity();
 			// $userEntity->whereEq('id','blog.id');
-			$entity->whereLike("title",'%'.$key_word)
-			->whereOrLike("title",$key_word.'%')
-			->whereOrLike("markdown",'%'.$key_word)
-			->whereOrLike("markdown",$key_word.'%');
+			$entity->whereLike("title",'%'.$key_word.'%')
+			->whereOrLike("markdown",'%'.$key_word.'%');
 			// ->whereOrExists("user.username",$userEntity);
 		}
-		if($sortName=='my') $entity->whereEq('uid',$request->getAttribute("user_id"));
+		if($sortName=='update_time'&&empty($request->getAttribute("user_id"))){
+			return new JsonResponse(["data"=>[]]);
+		} 
+		if($sortName=='update_time') $entity->whereEq('uid',$request->getAttribute("user_id"));
 		if(isset($tagId)&&!empty($tagId))
 			$entity->whereEq("tag_id",$tagId);
 		$data=$entity->order($sortName,"DESC")->select();
@@ -132,6 +136,7 @@ class ArticleController
 	 * @param    array                    $args     [description]
 	 * @return   [type]                             [description]
 	 */
+	//获取文章详细信息
 	public function getFrontArticle(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
 		$Blog=new BlogEntity();
@@ -210,7 +215,7 @@ class ArticleController
 	{
 		$data['user_id']=$request->getAttribute("user_id");
 		$effect=ArticleDataAccess::like($args['aid'],$data['user_id']);
-		if($effect==true){
+		if(!empty($effect)){
 			return new JsonResponse(['count'=>$effect,"success"=>true,"isLike"=>true]);
 		}
 		return new JsonResponse(['count'=>$effect,"success"=>false,"isLike"=>false],422);

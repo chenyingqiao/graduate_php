@@ -2,7 +2,7 @@
 * @Author: lerko
 * @Date:   2017-04-06 19:12:11
 * @Last Modified by:   ‘chenyingqiao’
-* @Last Modified time: 2017-05-02 22:10:25
+* @Last Modified time: 2017-05-04 11:07:45
 */
 show tables;
 show create table admin_users;
@@ -12,7 +12,7 @@ show create table user_operation_log;
 select * from user_operation_log;
 
 show create table blog;
-delete from blog where id=-1;
+delete from blog where id=5;
 delete from blog where title is null;
 select id,uid,title,visit_count,create_time,tag_id from blog;
 select `blog`.`id`,`blog`.`uid`,`blog`.`markdown`,`blog`.`title`,`blog`.`discreption`,`blog`.`content`,`blog`.`create_time`,`blog`.`update_time`,`blog`.`cat_id`,`blog`.`visit_count`,`blog`.`tag_id` from blog order by blog.visit_count asc limit 0,10;
@@ -85,6 +85,7 @@ truncate table image_warehouse;
 show create table blog_like;
 select * from blog_like;
 {
+truncate table blog_like;
 	drop table blog_like;
 	CREATE TABLE IF NOT EXISTS `blog`.`blog_like` (
 	  `id` INT(11) NOT NULL AUTO_INCREMENT,
