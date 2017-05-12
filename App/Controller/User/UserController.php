@@ -3,7 +3,7 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-12 21:08:20
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-04-23 11:06:33
+ * @Last Modified time: 2017-05-12 07:54:59
  */
 namespace App\Controller\User;
 
@@ -42,11 +42,12 @@ class UserController
 		if(!$User){
 			return new JsonResponse(['error_msg'=>"获取用户信息失败"],422);
 		}
+		$image_id=$user_id%4;
 		return new JsonResponse([
 				"nickname"=>$User["username"],
 				"uid"=>$User['id'],
 				"role"=>"user",
-				"avatar"=>"http://api-lerko.ngrok.cc/UploadFile/avatar.jpg",
+				"avatar"=>"http://api-lerko.ngrok.cc/Avater/".$image_id.".jpg",
 				"likes"=>[],
 				"provider"=>""
 			]);

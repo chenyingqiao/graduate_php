@@ -3,13 +3,14 @@
  * @Author: ‘chenyingqiao’
  * @Date:   2017-04-15 14:49:28
  * @Last Modified by:   ‘chenyingqiao’
- * @Last Modified time: 2017-05-09 08:30:51
+ * @Last Modified time: 2017-05-12 09:28:36
  */
 namespace App\Controller\User;
 
 use App\Model\BlogEntity;
 use App\Model\CatEntity;
 use App\Model\DataAccess\ArticleDataAccess;
+use App\Model\DataAccess\UserDataAccess;
 use App\Model\UserEntity;
 use App\Tool\Tool;
 use Psr\Http\Message\ResponseInterface;
@@ -139,6 +140,7 @@ class ArticleController
 	//获取文章详细信息
 	public function getFrontArticle(ServerRequestInterface $request,ResponseInterface $response,array $args)
 	{
+
 		$Blog=new BlogEntity();
 		$data=$Blog->whereEq("id",$args['id'])->find();
 		$Blog->visit_count=$data['visit_count']+1;
@@ -151,7 +153,8 @@ class ArticleController
 					"like_count"=>$data['like'],
 					"visit_count"=>$Blog->visit_count,
 					"comment_count"=>rand(1,50),
-					"content"=>$data['content']
+					"content"=>$data['content'],
+					"username"=>UserDataAccess::getUserInfoById($data['uid'])['username']
 				]
 			]);
 	}
